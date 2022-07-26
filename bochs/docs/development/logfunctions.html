@@ -1,0 +1,417 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Log Functions</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs Developers Guide"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="About the code"
+HREF="about-the-code.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure Scripting"
+HREF="configure-scripting.html"><LINK
+REL="NEXT"
+TITLE="Internal timers"
+HREF="timers.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs Developers Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="configure-scripting.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. About the code</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="timers.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="LOGFUNCTIONS"
+>2.5. Log Functions</A
+></H1
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>logfunctions</I
+></SPAN
+> class is one of the base classes of Bochs.
+It supports 4 log levels (debug, info, error, panic) and 4 possible "actions"
+that can be done when a log event occurs. Most of the higher level C++ classes of Bochs
+inherit this class to make the logging configuration per object (here called "module")
+possible. In the Bochs sources the log events appear as macros (BX_DEBUG, BX_INFO,
+BX_ERROR, BX_PANIC) and they call the related logfunction methods, unless the
+symbol BX_NO_LOGGING is set to 1. This is the definition in <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bochs.h</I
+></SPAN
+>:
+<PRE
+CLASS="SCREEN"
+>typedef class BOCHSAPI logfunctions
+{
+  char *name;
+  char *prefix;
+  int onoff[N_LOGLEV];
+  class iofunctions *logio;
+  // default log actions for all devices, declared and initialized
+  // in logio.cc.
+  BOCHSAPI_CYGONLY static int default_onoff[N_LOGLEV];
+public:
+  logfunctions(void);
+  logfunctions(class iofunctions *);
+ ~logfunctions(void);
+
+  void info(const char *fmt, ...)   BX_CPP_AttrPrintf(2, 3);
+  void error(const char *fmt, ...)  BX_CPP_AttrPrintf(2, 3);
+  void panic(const char *fmt, ...)  BX_CPP_AttrPrintf(2, 3);
+  void ldebug(const char *fmt, ...) BX_CPP_AttrPrintf(2, 3);
+  void fatal (const char *prefix, const char *fmt, va_list ap, int exit_status);
+  void ask (int level, const char *prefix, const char *fmt, va_list ap);
+  void put(const char *p);
+  void put(const char *n, const char *p);
+  void setio(class iofunctions *);
+  void setonoff(int loglev, int value) {
+    assert (loglev &#62;= 0 &#38;&#38; loglev &#60; N_LOGLEV);
+    onoff[loglev] = value;
+  }
+  const char *get_name() const { return name; }
+  const char *getprefix() const { return prefix; }
+  int getonoff(int level) const {
+    assert (level&#62;=0 &#38;&#38; level&lt;N_LOGLEV);
+    return onoff[level];
+  }
+  static void set_default_action(int loglev, int action) {
+    assert (loglev &#62;= 0 &#38;&#38; loglev &lt; N_LOGLEV);
+    assert (action &#62;= 0 &#38;&#38; action &lt; N_ACT);
+    default_onoff[loglev] = action;
+  }
+  static int get_default_action(int loglev) {
+    assert (loglev &#62;= 0 &#38;&#38; loglev &lt; N_LOGLEV);
+    return default_onoff[loglev];
+  }
+} logfunc_t;</PRE
+></P
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN357"
+>2.5.1. Methods</A
+></H2
+><P
+>Here is a short description of some <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>logfunctions</I
+></SPAN
+> methods.
+<P
+></P
+><UL
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>constructor</I
+></SPAN
+> registers a new log module with default values.
+The module's log prefix is empty and the log levels are set up with default actions.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>destructor</I
+></SPAN
+> removes the log module from the table.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>info()</I
+></SPAN
+>, <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>error()</I
+></SPAN
+>, <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>panic()</I
+></SPAN
+>
+and <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>ldebug()</I
+></SPAN
+> methods are called via macros to create a log event
+of the related level.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>fatal()</I
+></SPAN
+> method is called if a log event occurs and it's
+action is set to "fatal". It is used to shut down the Bochs simulation.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>ask()</I
+></SPAN
+> method is called if a log event occurs and it's
+action is set to "ask". It sends an event to the simulator interface and depending
+on the return value the simulation continues or it is terminated by calling
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>fatal()</I
+></SPAN
+>. The simulator interface either prompts the user on
+the console or calls some platform / gui specific code to handle the
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>ask</I
+></SPAN
+> request.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>put()</I
+></SPAN
+> methods are used to set up the log module prefix in
+that appears in the log file and the log module name that appears in the config
+interface. If the name is not specified, the prefix is used instead.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>setio()</I
+></SPAN
+> method sets up the <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>iofunctions</I
+></SPAN
+>
+class for the log file output. This method is only used by the <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>logfunctions</I
+></SPAN
+>
+constructors.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>getonoff()</I
+></SPAN
+> and <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>setonoff()</I
+></SPAN
+> methods
+are used by the config interface to display and change the log actions for a
+Bochs facility.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>get_default_action()</I
+></SPAN
+> and <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>set_default_action()</I
+></SPAN
+>
+methods are also used by the config interface to set up the default action for a
+log level.</P
+></LI
+><LI
+><P
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>get_name()</I
+></SPAN
+> and <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>getprefix()</I
+></SPAN
+> methods return
+the strings set up with the <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>put()</I
+></SPAN
+> method. The config interface
+is also using them to build the menu / dialog to set up the log functions.</P
+></LI
+></UL
+></P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="configure-scripting.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="timers.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure Scripting</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="about-the-code.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Internal timers</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

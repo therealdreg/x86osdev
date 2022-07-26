@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Windows NT 4.0</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs User Manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Guest operating systems"
+HREF="guests.html"><LINK
+REL="PREVIOUS"
+TITLE="DOS"
+HREF="guest-dos.html"><LINK
+REL="NEXT"
+TITLE="Windows 2000 / Windows 2000 Server"
+HREF="guest-win2k.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs User Manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="guest-dos.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 10. Guest operating systems</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="guest-win2k.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="GUEST-WINNT4"
+>10.4. Windows NT 4.0</A
+></H1
+><P
+>You must read the message regarding software licenses in
+<A
+HREF="thirdparty.html"
+>Section 1.6</A
+> before you install Windows NT 4.0 as a guest operating system in Bochs.</P
+><P
+>Here are the known issues about installing and running Windows NT4.0 :</P
+><P
+></P
+><UL
+><LI
+><P
+>If you want to use the LGPL'd VGABIOS to install Windows NT 4.0 you'll need
+version 0.4c or higher. With older versions you'll get a black screen after
+first reboot.</P
+></LI
+><LI
+><P
+>to log in you must press ctrl-alt-del, and it is likely that the window manager
+will trap this key combination. You can either use the trick described in
+<A
+HREF="enter-special-keys.html"
+>Section 9.17</A
+> or define a user short-cut
+(callable through the user short-cut gui button)
+in you configuration file, for example:
+<PRE
+CLASS="PROGRAMLISTING"
+>keyboard: user_shortcut=ctrl-alt-del</PRE
+></P
+></LI
+><LI
+><P
+>For installing and using Windows NT it is necessary to limit the maximum CPUID
+to 3. In the configuration file you need to add a line like this:
+<PRE
+CLASS="PROGRAMLISTING"
+>cpuid: cpuid_limit_winnt=1</PRE
+></P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="guest-dos.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="guest-win2k.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>DOS</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="guests.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Windows 2000 / Windows 2000 Server</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

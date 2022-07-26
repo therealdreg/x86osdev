@@ -1,0 +1,446 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Internal timers</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs Developers Guide"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="About the code"
+HREF="about-the-code.html"><LINK
+REL="PREVIOUS"
+TITLE="Log Functions"
+HREF="logfunctions.html"><LINK
+REL="NEXT"
+TITLE="The Bochs devices base class bx_devmodel_c"
+HREF="devmodel.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs Developers Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="logfunctions.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. About the code</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="devmodel.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="TIMERS"
+>2.6. Internal timers</A
+></H1
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN405"
+>2.6.1. Overview</A
+></H2
+><P
+>The Bochs internal timers are required to provide timer features in the device
+emulation and for the interaction between simulator and gui. They are implemented
+in the <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bx_pc_system_c</I
+></SPAN
+> class and driven by the cpu. When
+programming a timer the interval is specified in useconds and the timer code
+translates the value to cpu ticks using the <A
+HREF="../user/bochsrc.html#BOCHSOPT-CPU-IPS"
+TARGET="_top"
+>IPS</A
+>
+value. In the original implementation the cpu object calls a timer method to increment
+the system time by one tick after completing one instruction. If a timer has
+expired, the related timer handler function is called. Now it is also possible
+to execute a number of cpu instructions, finally update the timer subsystem
+with this number and possibly call several timer handlers. Here are some
+examples for timers in the devices and gui code:
+<P
+></P
+><UL
+><LI
+><P
+>the PIT (i82C54) system timer at 18.2 Hz</P
+></LI
+><LI
+><P
+>the CMOS RTC one-second-timer</P
+></LI
+><LI
+><P
+>the display update timer (set up with "vga: update_freq=X")</P
+></LI
+><LI
+><P
+>the devices timer (polls keyboard/mouse events from the gui every 1 emulated msecond)</P
+></LI
+><LI
+><P
+>the LED auto-off timer (indicating data transfer for min 0.5 seconds)</P
+></LI
+><LI
+><P
+>the synchronization timers (realtime/slowdown) are also based on the standard timers</P
+></LI
+></UL
+></P
+><P
+>These are the capabilities of the Bochs internal timers:
+<P
+></P
+><UL
+><LI
+><P
+>register / unregister at runtime</P
+></LI
+><LI
+><P
+>activate / deactivate at runtime</P
+></LI
+><LI
+><P
+>timer period changeable</P
+></LI
+><LI
+><P
+>one-shot or continuous mode</P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN433"
+>2.6.2. Timer definitions, members and methods</A
+></H2
+><P
+>Here are the timer-related definitions and members in <TT
+CLASS="FILENAME"
+>pc_system.h</TT
+>:
+<PRE
+CLASS="SCREEN"
+>#define BX_MAX_TIMERS 64
+#define BX_NULL_TIMER_HANDLE 10000
+
+typedef void (*bx_timer_handler_t)(void *);
+
+  struct {
+    bool inUse;         // Timer slot is in-use (currently registered).
+    Bit64u  period;     // Timer periodocity in cpu ticks.
+    Bit64u  timeToFire; // Time to fire next (in absolute ticks).
+    bool active;        // 0=inactive, 1=active.
+    bool continuous;    // 0=one-shot timer, 1=continuous periodicity.
+    bx_timer_handler_t funct;  // A callback function for when the
+                               //   timer fires.
+    void *this_ptr;            // The this-&#62; pointer for C++ callbacks
+                               //   has to be stored as well.
+#define BxMaxTimerIDLen 32
+    char id[BxMaxTimerIDLen];  // String ID of timer.
+    Bit32u param;              // Device-specific value assigned to timer (optional)
+  } timer[BX_MAX_TIMERS];
+
+  unsigned   numTimers;  // Number of currently allocated timers.
+  unsigned   triggeredTimer;  // ID of the actually triggered timer.
+  Bit32u     currCountdown; // Current countdown ticks value (decrements to 0).
+  Bit32u     currCountdownPeriod; // Length of current countdown period.
+  Bit64u     ticksTotal; // Num ticks total since start of emulator execution.
+  Bit64u     lastTimeUsec; // Last sequentially read time in usec.
+  Bit64u     usecSinceLast; // Number of useconds claimed since then.
+
+  // A special null timer is always inserted in the timer[0] slot.  This
+  // make sure that at least one timer is always active, and that the
+  // duration is always less than a maximum 32-bit integer, so a 32-bit
+  // counter can be used for the current countdown.
+  static const Bit64u NullTimerInterval;
+  static void nullTimer(void* this_ptr);</PRE
+></P
+><P
+>These are the public timer-related methods for timer control, driving the timers
+with the cpu and retrieving the internal time implemented in the <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bx_pc_system_c</I
+></SPAN
+>
+class:
+<PRE
+CLASS="SCREEN"
+>  void   initialize(Bit32u ips);
+  int    register_timer(void *this_ptr, bx_timer_handler_t, Bit32u useconds,
+                        bool continuous, bool active, const char *id);
+  bool   unregisterTimer(unsigned timerID);
+  void   setTimerParam(unsigned timerID, Bit32u param);
+  void   start_timers(void);
+  void   activate_timer(unsigned timer_index, Bit32u useconds, bool continuous);
+  void   deactivate_timer(unsigned timer_index);
+  unsigned triggeredTimerID(void) {
+    return triggeredTimer;
+  }
+  Bit32u triggeredTimerParam(void) {
+    return timer[triggeredTimer].param;
+  }
+  static BX_CPP_INLINE void tick1(void) {
+    if (--bx_pc_system.currCountdown == 0) {
+      bx_pc_system.countdownEvent();
+    }
+  }
+  static BX_CPP_INLINE void tickn(Bit32u n) {
+    while (n &#62;= bx_pc_system.currCountdown) {
+      n -= bx_pc_system.currCountdown;
+      bx_pc_system.currCountdown = 0;
+      bx_pc_system.countdownEvent();
+      // bx_pc_system.currCountdown is adjusted to new value by countdownevent().
+    }
+    // 'n' is not (or no longer) &#62;= the countdown size.  We can just decrement
+    // the remaining requested ticks and continue.
+    bx_pc_system.currCountdown -= n;
+  }
+
+  int register_timer_ticks(void* this_ptr, bx_timer_handler_t, Bit64u ticks,
+                           bool continuous, bool active, const char *id);
+  void activate_timer_ticks(unsigned index, Bit64u instructions,
+                            bool continuous);
+  Bit64u time_usec();
+  Bit64u time_usec_sequential();
+  static BX_CPP_INLINE Bit64u time_ticks() {
+    return bx_pc_system.ticksTotal +
+      Bit64u(bx_pc_system.currCountdownPeriod - bx_pc_system.currCountdown);
+  }
+
+  static BX_CPP_INLINE Bit32u  getNumCpuTicksLeftNextEvent(void) {
+    return bx_pc_system.currCountdown;
+  }</PRE
+></P
+><P
+>This private method is called when the function handling the clock ticks finds
+that an event has occurred:
+<PRE
+CLASS="SCREEN"
+>  void   countdownEvent(void);</PRE
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN443"
+>2.6.3. Detailed functional description</A
+></H2
+><P
+>The Bochs timer implementation requires at least one timer to be active. That's why
+there is a so-called <CODE
+CLASS="FUNCTION"
+>nullTimer</CODE
+> to make it work. It is
+initialized in the constructor on the first timer slot with the highest possible
+timer interval and it's handler is an empty function.</P
+><P
+>The most important variables of the timer subsystem are initialized on startup
+with the <CODE
+CLASS="FUNCTION"
+>nullTimer</CODE
+> values and updated after each timer
+modification (register / unregister / activate / deactivate / processing
+handler).
+<P
+></P
+><UL
+><LI
+><P
+><SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>ticksTotal</I
+></SPAN
+>: number of ticks total from emulator
+startup to the last update of timer subsystem</P
+></LI
+><LI
+><P
+><SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>currCountdownPeriod</I
+></SPAN
+>: length of the period
+from <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>ticksTotal</I
+></SPAN
+> to the next timer event</P
+></LI
+><LI
+><P
+><SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>currCountdown</I
+></SPAN
+>: number of ticks remaining
+until the next timer event occurs</P
+></LI
+></UL
+>
+The number if ticks since emulator startup is calculated with the formula
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>ticksTotal + currCountdownPeriod - currCountdown</I
+></SPAN
+> and
+returned with the <CODE
+CLASS="FUNCTION"
+>time_ticks()</CODE
+> method. The number of
+useconds since emulator startup is returned with the <CODE
+CLASS="FUNCTION"
+>time_usec()</CODE
+>
+method computed from the return value of <CODE
+CLASS="FUNCTION"
+>time_ticks()</CODE
+> and
+the <A
+HREF="../user/bochsrc.html#BOCHSOPT-CPU-IPS"
+TARGET="_top"
+>IPS</A
+> value.</P
+><P
+><IMG
+SRC="../images/undercon.png"> To be continued</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="logfunctions.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="devmodel.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Log Functions</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="about-the-code.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The Bochs devices base class <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bx_devmodel_c</I
+></SPAN
+></TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,272 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Guest operating systems</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs User Manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Using the bximage tool"
+HREF="using-bximage.html"><LINK
+REL="NEXT"
+TITLE="FreeBSD 5.2.1"
+HREF="guest-freebsd.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs User Manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="using-bximage.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="guest-freebsd.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="GUESTS"
+></A
+>Chapter 10. Guest operating systems</H1
+><P
+>In the past several tweaks were necessary to install a guest OS inside of Bochs.
+Nowadays it's almost the same as installing it on a real machine. There are only
+a few Bochs specific issues you should know about. Note that we cannot give you
+a full installation guide if you don't know how to install an OS in the real
+world. The following remarks apply to all guest OS installations. Some specific
+issues are reported in the next sections.
+<P
+></P
+><UL
+><LI
+><P
+>First of all you need the installation media or image (floppy/CD/DVD).
+For platforms that don't support raw device access it might be necessary to
+create an image from the media. You must read the message regarding software
+licenses in <A
+HREF="thirdparty.html"
+>Section 1.6</A
+> before you install or use a commercial
+guest operating system in Bochs.</P
+></LI
+><LI
+><P
+>Then you need to create a hard drive image with bximage. For the
+required size see the documentation of the OS you'd like to install. See
+<A
+HREF="using-bximage.html"
+>Section 9.22</A
+> how to create the image.</P
+></LI
+><LI
+><P
+>Finally you have to create configuration for your guest OS. You can
+edit the sample configuration distributed with Bochs or use the configuration
+interface to adjust the settings. Check the documentation of your guest OS for
+the required memory size, cpu speed and supported hardware.</P
+></LI
+></UL
+>
+Now you should be able to run Bochs and start the installation process. Depending
+on the host cpu speed and the size of the guest OS it can take a few minutes or
+even some hours.</P
+><P
+><PRE
+CLASS="SCREEN"
+>What disk images are available.
+What works
+Known problems</PRE
+></P
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="GUEST-KNOPPIX"
+>10.1. Knoppix</A
+></H1
+><P
+>    Contributed by Alexander Schuch.
+  </P
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5195"
+>10.1.1. Getting Knoppix</A
+></H2
+><P
+>      Knoppix is a live CD (700M) or live DVD (3.2G) based on Debian GNU/Linux, with lots of
+      ready-to-run programs (web browser, office suite, a few games, and more), using
+      <ABBR
+CLASS="ABBREV"
+>KDE</ABBR
+> as desktop environment. It can be booted directly from CD, without
+      any installation needed. You can download it from <A
+HREF="http://www.knoppix.org/"
+TARGET="_top"
+>knoppix.org</A
+>.
+    </P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5200"
+>10.1.2. Preparing Bochs</A
+></H2
+><P
+>      As Knoppix runs completely from CD/DVD, you don't need to setup a hard disk. You just need to set up
+      the location of the downloaded ISO image in your <TT
+CLASS="FILENAME"
+>bochsrc</TT
+>, and make Bochs boot
+      from it. Because Knoppix contains a graphical user interface, and has no other storage space but
+      the emulated RAM, it needs at least 128MB of it, see
+      <A
+HREF="bochsrc.html#BOCHSOPT-MEMORY"
+>megs option</A
+>. Furthermore, you need to enable VBE support in
+      Bochs (see <A
+HREF="vesa-notes.html"
+>Section 9.18</A
+>).
+    </P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5206"
+>10.1.3. Using Knoppix</A
+></H2
+><P
+>      There is nothing more to do! Just start Bochs and wait for Knoppix to load...
+    </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>      You are logged in as normal user, if you want to become super user, just <B
+CLASS="COMMAND"
+>su</B
+>.
+      There is no password needed (empty password).
+    </P
+></BLOCKQUOTE
+></DIV
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="using-bximage.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="guest-freebsd.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Using the bximage tool</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>FreeBSD 5.2.1</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

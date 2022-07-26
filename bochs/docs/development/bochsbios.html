@@ -1,0 +1,336 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The Bochs BIOS</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs Developers Guide"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="About the code"
+HREF="about-the-code.html"><LINK
+REL="PREVIOUS"
+TITLE="How to add keymapping in a GUI client"
+HREF="add-keymapping.html"><LINK
+REL="NEXT"
+TITLE="The Bochs plugin interface"
+HREF="bochsplugins.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs Developers Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="add-keymapping.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. About the code</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="bochsplugins.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="BOCHSBIOS"
+>2.13. The Bochs BIOS</A
+></H1
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="BIOSSUMS"
+>2.13.1. The biossums utility</A
+></H2
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN1508"
+>2.13.1.1. Intention</A
+></H3
+><P
+>Writing a BIOS for a pc-compatible includes the task of embedding various
+checksums. At least there is the overall bios checksum stored in the very
+last byte of the program. Depending on the number and types of services the
+bios provides there are others, e.g.</P
+><P
+></P
+><UL
+><LI
+><P
+>a checksum for the PCI BIOS extensions</P
+></LI
+><LI
+><P
+>a checksum for the PCI interrupt routing table</P
+></LI
+><LI
+><P
+>a checksum for the plug and play BIOS extensions</P
+></LI
+></UL
+><P
+>All these checksums have one common point: using the usual assembler directives
+they are hard (if not impossible) to compute at compile time. You can either
+compute them by hand --- a tedious, error-prone task, where in addition you
+often have to make unreliable assumptions about the memory layout of the
+entire BIOS. Or you patch them directly into your compiled BIOS image. Apart
+from computing the checksums this is what <B
+CLASS="COMMAND"
+>biossums</B
+> does for you.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN1520"
+>2.13.1.2. Checksums</A
+></H3
+><P
+>With the exception of the overall BIOS checksum, in a modern PC BIOS checksums
+are not used to ensure data integrity. Instead they are used in conjunction
+with certain signatures to securely identify the entry points or the addresses
+of important data of some BIOS extensions. Because these services are often
+invoked from x86 protected mode the original method via interrupts is not
+applicable. Scanning (even only parts) of the BIOS for (short) signatures and
+solely relying on this is insecure though, cause the found signature might not
+refer to the sought service but rather be some obscure machine code resembling
+the signature by accident.</P
+><P
+>Since signatures are usually part of a larger header or table the above
+mentioned problem is being circumvented by checksumming over this header and
+comparing the result to a checksum stored next to the signature. In practice the
+checksum is often part of the header, chosen in a way that the contents of the
+header add up to zero.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN1524"
+>2.13.1.3. Usage</A
+></H3
+><P
+><B
+CLASS="COMMAND"
+>biossums</B
+> is very simple and straightforward. The only (and mandatory)
+argument is the file name of the BIOS image. The file is being read, patched and written.
+So if you want to keep your original file for reference, use <B
+CLASS="COMMAND"
+>biossums</B
+>
+on a copy of your BIOS image.</P
+><P
+>For now, <B
+CLASS="COMMAND"
+>biossums</B
+> can only rely on signatures to find the locations
+of the accompanying checksums. Therefore <B
+CLASS="COMMAND"
+>biossums</B
+> refuses to set any
+checksums if it finds more than one signature of the same type.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN1532"
+>2.13.1.4. Example output</A
+></H3
+><P
+>Running upon the current BIOS-bochs-legacy <B
+CLASS="COMMAND"
+>biossums</B
+> displays:
+<PRE
+CLASS="SCREEN"
+>PCI-Bios header at: 0x9610
+Current checksum:     0x17
+Calculated checksum:  0x17
+
+
+$PIR header at:     0x99C0
+Current checksum:     0x37
+Calculated checksum:  0x37
+
+
+$PnP header at:     0x9C80
+Current checksum:     0xD1
+Calculated checksum:  0x0F  Setting checksum.
+
+
+Bios checksum at:   0xFFFF
+Current checksum:     0x00
+Calculated checksum:  0x28  Setting checksum.</PRE
+></P
+><P
+>If we patch in a second "_32_" signature at offset 0x9F00 and reset the $PIR
+checksum to 0x00 we get:</P
+><P
+><PRE
+CLASS="SCREEN"
+>PCI-Bios header at: 0x9610
+Current checksum:     0x17
+Calculated checksum:  0x17  
+
+PCI-Bios header at: 0x9F00
+Current checksum:     0x00
+Calculated checksum:  0x00  Multiple PCI headers! No checksum set.
+
+
+$PIR header at:     0x99C0
+Current checksum:     0x00
+Calculated checksum:  0x37  Setting checksum.
+
+
+$PnP header at:     0x9C80
+Current checksum:     0x0F
+Calculated checksum:  0x0F
+
+
+Bios checksum at:   0xFFFF
+Current checksum:     0x28
+Calculated checksum:  0x05  Setting checksum.</PRE
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN1540"
+>2.13.1.5. Possible enhancements</A
+></H3
+><P
+>Although <B
+CLASS="COMMAND"
+>biossums</B
+> takes care of all checksums being used by
+the BIOS of the Bochs project (as of version 2.02) there are more to cover, e.g.
+the checksums for "Plug and Play" BIOS extension.</P
+><P
+>In addition it was planned to provide further information to <B
+CLASS="COMMAND"
+>biossums</B
+>
+via map-/symbol-files to verify the locations of checksums apart from scanning for
+signatures. For now this seems not to be necessary; in practice no double
+signatures have been observed yet.</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="add-keymapping.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="bochsplugins.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>How to add keymapping in a GUI client</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="about-the-code.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The Bochs plugin interface</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

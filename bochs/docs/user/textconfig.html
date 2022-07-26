@@ -1,0 +1,534 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The configuration interface 'textconfig'</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs User Manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Using Bochs"
+HREF="using-bochs.html"><LINK
+REL="PREVIOUS"
+TITLE="Search order for the configuration file"
+HREF="search-order.html"><LINK
+REL="NEXT"
+TITLE="Pre-defined CPU models"
+HREF="cpu-models.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs User Manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="search-order.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. Using Bochs</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="cpu-models.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="TEXTCONFIG"
+>5.3. The configuration interface 'textconfig'</A
+></H1
+><P
+>The configuration interface 'textconfig' is the text mode version of the Bochs
+configuration system. It is a series of menus (using stdin/stdout) that allows
+you to edit all the settings that control Bochs' behavior. If you do not write
+a config_interface line, Bochs will choose it as the default for you (unless Bochs
+is compiled for Win32 or wxWidgets only). If the gui console is available at
+runtime, textconfig switches the display to text mode 80 x 25 and restores the
+simulation screen afterwards.</P
+><P
+>It consists of these three parts:
+<P
+></P
+><UL
+><LI
+><P
+>the start menu</P
+></LI
+><LI
+><P
+>the headerbar buttons</P
+></LI
+><LI
+><P
+>the runtime configuration</P
+></LI
+></UL
+></P
+><P
+>On Win32 (without wxWidgets) the default configuration interface 'win32config' is
+very similar, but it presents gui dialogs instead of text menus.</P
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN3011"
+>5.3.1. The start menu</A
+></H2
+><P
+>If you start Bochs without the quickstart argument (-q), the Bochs configuration
+main menu appears:
+<PRE
+CLASS="SCREEN"
+>------------------------------
+Bochs Configuration: Main Menu
+------------------------------
+
+This is the Bochs Configuration Interface, where you can describe the
+machine that you want to simulate.  Bochs has already searched for a
+configuration file (typically called bochsrc.txt) and loaded it if it
+could be found.  When you are satisfied with the configuration, go
+ahead and start the simulation.
+
+You can also start bochs with the -q option to skip these menus.
+
+1. Restore factory default configuration
+2. Read options from...
+3. Edit options
+4. Save options to...
+5. Restore the Bochs state from...
+6. Begin simulation
+7. Quit now
+
+Please choose one: [5]</PRE
+></P
+><P
+>Here you can load, edit and save the configuration and finally start the simulation.
+It is possible to start Bochs without a config file and to edit all the settings using
+the item "Edit options". Don't forget to save the configuration if you want to use this
+setup for another Bochs session.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="HEADERBAR"
+>5.3.2. The Bochs headerbar</A
+></H2
+><P
+><P
+><IMG
+SRC="../images/headerbar.png"></P
+></P
+><P
+>The headerbar appears on top of the Bochs simulation window. Here you can control the
+behavoiur of Bochs at runtime if you click on one of these buttons:
+<P
+></P
+><UL
+><LI
+><P
+>floppy buttons</P
+><P
+>  Here you can toggle the status of the floppy media (inserted/ejected). Bochs for
+  win32 presents you a small dialog box for changing the floppy image. You can
+  setup floppy drives using <A
+HREF="bochsrc.html#BOCHSOPT-FLOPPYAB"
+>floppya/floppyb option</A
+>.</P
+></LI
+><LI
+><P
+>cdrom button</P
+><P
+>  Here you can toggle the media status of the first CD-ROM drive (inserted/ejected).
+  CD-ROM drives can be set up using <A
+HREF="bochsrc.html#BOCHSOPT-ATA-MASTER-SLAVE"
+>ata(0-3)-master/-slave option</A
+>.
+  On some platforms this button brings a up a small dialog box for changing the
+  CD-ROM image.</P
+></LI
+><LI
+><P
+>mouse button</P
+><P
+>  Here you can enable the creation of mouse events by the host. Once mouse
+  events are captured, you cannot reach the button anymore, in order to disable
+  capturing again. By default you can enable and disable the mouse capture pressing
+  the CTRL key and the third (middle) mouse button. See the <A
+HREF="bochsrc.html#BOCHSOPT-MOUSE"
+>mouse option</A
+>
+  parameter 'toggle' for other methods to toggle the mouse capture.</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>  Changing the mouse capture at runtime is not supported by all display libraries,
+  but it is already present on RFB, SDL, SDL2, VNCSRV, Win32, wxWidgets and X11.</P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>  Support for 2 button mouse to toggle the capture mode not yet complete - using
+  another toggle method is recommended in that case.</P
+></BLOCKQUOTE
+></DIV
+></LI
+><LI
+><P
+>user button</P
+><P
+>  Press this button if you want to send the keyboard shortcut defined with the
+  <B
+CLASS="COMMAND"
+>user_shortcut</B
+> parameter of the <A
+HREF="bochsrc.html#BOCHSOPT-KEYBOARD"
+>keyboard</A
+>
+  option to the guest. Depending on the used <A
+HREF="bochsrc.html#BOCHSOPT-DISPLAYLIBRARY"
+>display_library option</A
+>,
+  it may even be possible to edit the shortcut before sending it.</P
+></LI
+><LI
+><P
+>copy button</P
+><P
+>The text mode screen text can be exported to the clipboard after pressing this
+button. The button has no effect in graphics mode.</P
+></LI
+><LI
+><P
+>paste button</P
+><P
+>Text in the clipboard can also be pasted, through Bochs, to the
+guest OS, as simulated keystrokes. Keyboard mapping must be enabled to make this
+feature work.</P
+></LI
+><LI
+><P
+>snapshot button</P
+><P
+>Press this button if you want to save a snapshot of the Bochs screen. All
+text and graphics modes are now supported. If gui dialogs are supported (e.g. on
+win32) Bochs presents you a "Save as..." dialog box to specify the filename. In
+text modes the formats BMP and TXT are supported depending on file extension.
+Platforms without gui dialogs are using the fixed filenames "snapshot.txt" or
+"snapshot.bmp".</P
+></LI
+><LI
+><P
+>config button</P
+><P
+>This button stops the Bochs simulation and starts the runtime configuration.
+(see below).</P
+></LI
+><LI
+><P
+>reset button</P
+><P
+>Press this button to trigger a hardware reset.</P
+></LI
+><LI
+><P
+>suspend button</P
+><P
+>Press this button to save current simulation state to a disk. The simulation
+could be restored back using bochs -r command. For more details read the
+<A
+HREF="using-save-restore.html"
+>Save and restore simulation</A
+> section.</P
+></LI
+><LI
+><P
+>power button</P
+><P
+>This button stops the simulation and quits bochs.</P
+></LI
+></UL
+></P
+><P
+>Some of these features may not be implemented or work different on your host platform.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="COMMAND-MODE"
+>5.3.3. Command mode</A
+></H2
+><P
+>When using 'sdl', 'sdl2', 'win32' or 'x' as the <B
+CLASS="COMMAND"
+>display_library</B
+>, the 
+option 'cmdmode' enables the "command mode" support. If enabled, pressing the F7
+key will enter 'command mode' (shown in the info item of the statusbar);
+the next key that is pressed will exit command-mode. When in command-mode,
+if the pressed key is in the list below, the corresponding action will be
+performed. With the exception of F7, any key pressed while in command-mode
+will not be received by the OS running in Bochs.</P
+><P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN3072"
+></A
+><P
+><B
+>Table 5-2. Supported keys</B
+></P
+><TABLE
+BORDER="1"
+RULES="all"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Key</TH
+><TH
+>Action</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>a</TD
+><TD
+>Press the Floppy A button</TD
+></TR
+><TR
+><TD
+>b</TD
+><TD
+>Press the Floppy B button</TD
+></TR
+><TR
+><TD
+>c</TD
+><TD
+>Press the Copy button</TD
+></TR
+><TR
+><TD
+>SHIFT + c</TD
+><TD
+>Press the Config button</TD
+></TR
+><TR
+><TD
+>f</TD
+><TD
+>Toggle windowed / fullscreen mode (sdl, sdl2 and win32 only)</TD
+></TR
+><TR
+><TD
+>p</TD
+><TD
+>Press the Paste button</TD
+></TR
+><TR
+><TD
+>SHIFT + p</TD
+><TD
+>Press the Power button</TD
+></TR
+><TR
+><TD
+>r</TD
+><TD
+>Press the Reset button</TD
+></TR
+><TR
+><TD
+>s</TD
+><TD
+>Press the Snapshot button</TD
+></TR
+><TR
+><TD
+>SHIFT + s</TD
+><TD
+>Press the Suspend button</TD
+></TR
+><TR
+><TD
+>u</TD
+><TD
+>Press the User button</TD
+></TR
+><TR
+><TD
+>F7</TD
+><TD
+>Send F7 keypress to emulation</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+><P
+>In fullscreen mode (sdl, sdl2, win32) some handlers do not bring up a dialog
+box. The floppy buttons just toggle the status, the snapshot feature uses the
+hardcoded file name and the user button sends the configured shortcut.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN3117"
+>5.3.4. The runtime configuration</A
+></H2
+><P
+>If you want to change certain settings at runtime, you have to press the "config" button in
+the headerbar. The simulation stops and the runtime menu appears on the console window / xterm
+or the Bochs gui console (if available).
+<PRE
+CLASS="SCREEN"
+>---------------------
+Bochs Runtime Options
+---------------------
+1. Floppy disk 0: /dev/fd0, size=1.44M, inserted
+2. Floppy disk 1: floppyb.img, size=1.44M, inserted
+3. 1st CDROM: (master on ata1) /dev/cdrom, ejected
+4. 2nd CDROM: (slave on ata1) /dev/cdrecorder, ejected
+5. 3rd CDROM: (not present)
+6. 4th CDROM: (not present)
+7. (not implemented)
+8. Log options for all devices
+9. Log options for individual devices
+10. Instruction tracing: off (doesn't exist yet)
+11. USB runtime options
+12. Misc runtime options
+13. Continue simulation
+14. Quit now
+
+Please choose one:  [15]</PRE
+></P
+><P
+>In the runtime configuration you can change the floppy/cdrom image or device,
+change the log options or adjust some other settings. If you have trouble with
+a specific device, you can change the log options for this device only to get
+more information (e.g. report debug messages).</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="search-order.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="cpu-models.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Search order for the configuration file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="using-bochs.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Pre-defined CPU models</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

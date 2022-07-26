@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Sound Blaster 16 Emulation</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs Developers Guide"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="About the code"
+HREF="about-the-code.html"><LINK
+REL="PREVIOUS"
+TITLE="Bochs's CMOS map"
+HREF="cmos-map.html"><LINK
+REL="NEXT"
+TITLE="The sound lowlevel interface"
+HREF="sound-lowlovel-basics.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs Developers Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="cmos-map.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. About the code</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="sound-lowlovel-basics.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="SB16-EMULATION-BASICS"
+>2.9. Sound Blaster 16 Emulation</A
+></H1
+><P
+>This section is a detailed description for configuring Sound Blaster 16 from
+source. If you have a binary and all you want to know is what to put in your
+<TT
+CLASS="FILENAME"
+>bochsrc</TT
+> file, see the <A
+HREF="../user/bochsrc.html#BOCHSOPT-SB16"
+TARGET="_top"
+>sb16</A
+>
+bochsrc option in the user guide.</P
+><P
+>The original version of the Sound Blaster 16 (SB16) emulation for Bochs was
+written and donated by Josef Drexler. The entire set of his SB16 patches have
+been integrated into Bochs, however, so you can find everything you need here.</P
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN490"
+>2.9.1. How well does it work?</A
+></H2
+><P
+>Right now, MPU401 emulation is next to perfect. It supports UART
+and SBMIDI mode, because the SB16's MPU401 ports can't do anything else as well.</P
+><P
+>The digital audio basically works, but the emulation is too slow for fluent
+output unless the application doesn't do much in the background (or the
+foreground, really). The sound tends to looping or crackle on slower
+computer, but the emulation appears to be correct. Even a MOD
+player works, although only for lower sampling speeds.</P
+><P
+>The OPL3 chip now also produces output. The source code has been ported from
+DOSBox and the output data is polled from the mixer thread.</P
+><P
+>Also, the MIDI data running through the MPU401 ports can be written
+into a SMF, that is the standard midi file. The wave output
+can be written into a VOC file, which has a format defined by
+Creative Labs. Output to a WAV file and dual output (device and file
+at the same time) is now also supported.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN496"
+>2.9.2. Output to a sound card</A
+></H2
+><P
+>Output to the host sound system is supported on Windows, Linux, FreeBSD, MacOS 9,
+MacOSX and platforms supported by SDL.</P
+><P
+>On Linux using OSS, the output goes to any file or device. If you have a
+wavetable synthesizer, midi can go to <TT
+CLASS="FILENAME"
+>/dev/midi00</TT
+>,
+otherwise you may need a midi interpreter. For example, the midid program from
+the DosEmu project would work. Wave output should go to <TT
+CLASS="FILENAME"
+>/dev/dsp</TT
+>.
+These devices are assumed to be OSS devices, if they're not some of the ioctl's
+might fail. If ALSA is present on Linux and the sound driver is set to
+<TT
+CLASS="FILENAME"
+>alsa</TT
+>, Bochs uses it's default PCM output device and MIDI
+sequencer.</P
+><P
+>On Windows, midi and wave output go to the midi mapper and the wave mapper,
+respectively. The device ID for the midi is now selectable. A future version
+might also have selectable wave output devices.</P
+><P
+>See the next section for more information about the sound lowlevel interface.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN505"
+>2.9.3. Configuring Bochs</A
+></H2
+><P
+>You need to <B
+CLASS="COMMAND"
+>configure</B
+> Bochs using the <CODE
+CLASS="OPTION"
+>--enable-sb16</CODE
+>
+option.
+There are a few values in <TT
+CLASS="FILENAME"
+>config.h</TT
+> that are relevant to the
+sound functions. Editing <TT
+CLASS="FILENAME"
+>config.h</TT
+> after running configure
+is usually not necessary, since it detects the available drivers and enables them
+for the compilation.</P
+><P
+>BX_USE_SB16_SMF should be 1 unless you intend to have several sound cards
+running at the same time.</P
+><P
+>BX_SOUND_LOWLEVEL_NAME is the name of the driver used as the "default" one for
+all features. The default value of this setting is the dummy driver with no output.
+The configure script usually changes this value. The following are supported at
+the moment:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>    alsa   Output for Linux with ALSA PCM and sequencer interface
+    oss    Output for Linux, to /dev/dsp and /dev/midi00
+    osx    Output for MacOSX midi and wave device
+    sdl    Wave output with SDL/SDL2
+    win    Output for Windows midi and wave mappers
+    file   Wave and midi output to file
+    dummy  Dummy functions, no output</PRE
+><P
+>Setup the SB16 emulation in your <TT
+CLASS="FILENAME"
+>bochsrc</TT
+>, according to instructions
+in that file (see <A
+HREF="../user/bochsrc.html#BOCHSOPT-SB16"
+TARGET="_top"
+>sb16</A
+> option
+in the user guide).</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN518"
+>2.9.4. Runtime configuration</A
+></H2
+><P
+>The source and the DOS executable for the SB16CTRL program that is used to modify
+the runtime behaviour of the SB16 emulator is included in
+misc/sb16.</P
+><P
+>See the section <A
+HREF="../user/using-sound.html#SB16CTRL"
+TARGET="_top"
+>SB16CTRL</A
+>
+in the user documentation for information about the commands of SB16CTRL.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="cmos-map.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="sound-lowlovel-basics.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Bochs's CMOS map</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="about-the-code.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The sound lowlevel interface</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

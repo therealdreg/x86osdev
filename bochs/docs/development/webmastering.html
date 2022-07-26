@@ -1,0 +1,279 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Webmastering</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs Developers Guide"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Building a Bochs release"
+HREF="svn-release.html"><LINK
+REL="NEXT"
+TITLE="Updating the Bochs website content"
+HREF="update-website.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs Developers Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="svn-release.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="update-website.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="WEBMASTERING"
+></A
+>Chapter 5. Webmastering</H1
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="PROJECT-WEBSPACE"
+>5.1. Bochs project webspace</A
+></H1
+><P
+>The Bochs project webspace is stored under the SF directory <TT
+CLASS="FILENAME"
+>/home/project-web/bochs</TT
+>.
+It can be accessed from the SF shell using SSH or with the commands <B
+CLASS="COMMAND"
+>sftp</B
+>,
+<B
+CLASS="COMMAND"
+>scp</B
+> and <B
+CLASS="COMMAND"
+>rsync</B
+>. Some parts of the directory
+structure must be updated from the local CVS repository, others from Bochs SVN
+(directories <TT
+CLASS="FILENAME"
+>bochs</TT
+> and <TT
+CLASS="FILENAME"
+>sfsite</TT
+>).
+The online documentation, disk images and screenshots must be uploaded manually.
+<DIV
+CLASS="TABLE"
+><A
+NAME="AEN1845"
+></A
+><P
+><B
+>Table 5-1. Directory structure</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Location</TH
+><TH
+>Meaning</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>cgi-bin</TD
+><TD
+>CGI scripts for the website</TD
+></TR
+><TR
+><TD
+>htdocs</TD
+><TD
+>root directory of the website</TD
+></TR
+><TR
+><TD
+>htdocs/doc/docbook</TD
+><TD
+>Bochs online documentation</TD
+></TR
+><TR
+><TD
+>htdocs/docs-html</TD
+><TD
+>old Bochs documentation</TD
+></TR
+><TR
+><TD
+>htdocs/guestos</TD
+><TD
+>disk images directly stored on the Bochs website</TD
+></TR
+><TR
+><TD
+>htdocs/screenshot</TD
+><TD
+>screenshots of Bochs running several guest operating systems</TD
+></TR
+><TR
+><TD
+>htdocs/svn-snapshot</TD
+><TD
+>link to current snapshot</TD
+></TR
+><TR
+><TD
+>htdocs/techspec</TD
+><TD
+>technical specifications of several hardware components</TD
+></TR
+><TR
+><TD
+>lxr</TD
+><TD
+>Bochs source browser</TD
+></TR
+><TR
+><TD
+>sfsite-cvsroot</TD
+><TD
+>local CVS repository</TD
+></TR
+><TR
+><TD
+>sitebin</TD
+><TD
+>shell scripts (e.g. for snapshot generation)</TD
+></TR
+><TR
+><TD
+>siteman</TD
+><TD
+>website manual pages</TD
+></TR
+><TR
+><TD
+>snapshot</TD
+><TD
+>SVN snapshot storage area</TD
+></TR
+><TR
+><TD
+>tmp</TD
+><TD
+>temp directory for shell scripts</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="svn-release.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="update-website.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Building a Bochs release</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Updating the Bochs website content</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

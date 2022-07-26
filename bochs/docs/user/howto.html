@@ -1,0 +1,730 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Tips and Techniques</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs User Manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="The Bochs debugger gui"
+HREF="debugger-gui.html"><LINK
+REL="NEXT"
+TITLE="How to make a simple disk image"
+HREF="diskimagehowto.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs User Manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="debugger-gui.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="diskimagehowto.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="HOWTO"
+></A
+>Chapter 9. Tips and Techniques</H1
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="LOGOPTS-BY-DEVICE"
+>9.1. Specify log options by device</A
+></H1
+><P
+>This table shows the name used for setting up the log actions per device, the
+prefix that appears in the log file or when a panic occurs and a short description
+of the module. This example shows how to turn on debug messages for a specific
+device in bochsrc.
+<PRE
+CLASS="SCREEN"
+>debug: action=ignore, pci=report</PRE
+>
+The names can be used in upper case or lower case, since the check is not case
+sensitive. Note that the module names cannot be checked while reading the config
+file, since most of the modules do not exist at this point. Invalid names or names
+of modules not present in the current configuration will cause a panic when the
+simulation is starting.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN3718"
+></A
+><P
+><B
+>Table 9-1. Log function module names and prefixes</B
+></P
+><TABLE
+BORDER="1"
+RULES="all"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>Name</TH
+><TH
+>Prefix</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>ACPI</TD
+><TD
+>ACPI</TD
+><TD
+>PIIX4 ACPI controller</TD
+></TR
+><TR
+><TD
+>apic0</TD
+><TD
+>APIC0</TD
+><TD
+>APIC of first CPU</TD
+></TR
+><TR
+><TD
+>BIOS</TD
+><TD
+>BIOS</TD
+><TD
+>System BIOS</TD
+></TR
+><TR
+><TD
+>busmouse</TD
+><TD
+>BUSM</TD
+><TD
+>Busmouse</TD
+></TR
+><TR
+><TD
+>BXVGA</TD
+><TD
+>BXVGA</TD
+><TD
+>VGA adapter with VBE support</TD
+></TR
+><TR
+><TD
+>CD1</TD
+><TD
+>CD1</TD
+><TD
+>Lowlevel CD-ROM support for the first device (if configured, there can be CD2, CD3, CD4, ...)</TD
+></TR
+><TR
+><TD
+>cirrus</TD
+><TD
+>CIRRUS</TD
+><TD
+>Cirrus SVGA</TD
+></TR
+><TR
+><TD
+>CMOS</TD
+><TD
+>CMOS</TD
+><TD
+>CMOS RAM + RTC</TD
+></TR
+><TR
+><TD
+>cpu0</TD
+><TD
+>CPU0</TD
+><TD
+>First CPU (SMP emulation can have cpu1, cpu2, cpu3,...)</TD
+></TR
+><TR
+><TD
+>devices</TD
+><TD
+>DEV</TD
+><TD
+>Devices subsystem</TD
+></TR
+><TR
+><TD
+>DMA</TD
+><TD
+>DMA</TD
+><TD
+>DMA controller</TD
+></TR
+><TR
+><TD
+>E1000</TD
+><TD
+>E1000</TD
+><TD
+>Intel(R) Gigabit Ethernet</TD
+></TR
+><TR
+><TD
+>es1370</TD
+><TD
+>ES1370</TD
+><TD
+>ES1370 soundcard</TD
+></TR
+><TR
+><TD
+>extfpuirq</TD
+><TD
+>EXFIRQ</TD
+><TD
+>External FPU IRQ</TD
+></TR
+><TR
+><TD
+>floppy</TD
+><TD
+>FLOPPY</TD
+><TD
+>Floppy controller</TD
+></TR
+><TR
+><TD
+>gameport</TD
+><TD
+>GAME</TD
+><TD
+>Standard PC gameport</TD
+></TR
+><TR
+><TD
+>GDBST</TD
+><TD
+>GDBST</TD
+><TD
+>GDB stub support</TD
+></TR
+><TR
+><TD
+>GUI</TD
+><TD
+>GUI</TD
+><TD
+>Generic GUI code</TD
+></TR
+><TR
+><TD
+>harddrv</TD
+><TD
+>HD</TD
+><TD
+>IDE HD/CD emulation</TD
+></TR
+><TR
+><TD
+>hdimage</TD
+><TD
+>IMG</TD
+><TD
+>Disk image support</TD
+></TR
+><TR
+><TD
+>ioapic</TD
+><TD
+>IOAPIC</TD
+><TD
+>I/O APIC</TD
+></TR
+><TR
+><TD
+>iodebug</TD
+><TD
+>IODBG</TD
+><TD
+>I/O interface to debugger</TD
+></TR
+><TR
+><TD
+>keyboard</TD
+><TD
+>KBD</TD
+><TD
+>PS/2 keyboard and mouse</TD
+></TR
+><TR
+><TD
+>keymap</TD
+><TD
+>KEYMAP</TD
+><TD
+>Keyboard mapping</TD
+></TR
+><TR
+><TD
+>logio</TD
+><TD
+>IO</TD
+><TD
+>Bochs logging subsystem</TD
+></TR
+><TR
+><TD
+>memory</TD
+><TD
+>MEM0</TD
+><TD
+>Memory management</TD
+></TR
+><TR
+><TD
+>MACGUI</TD
+><TD
+>MGUI</TD
+><TD
+>MacOS9 / MacOSX gui</TD
+></TR
+><TR
+><TD
+>NE2K</TD
+><TD
+>NE2K</TD
+><TD
+>NE2000 ethernet adapter</TD
+></TR
+><TR
+><TD
+>NOGUI</TD
+><TD
+>NOGUI</TD
+><TD
+>GUI without input/output interface ("nogui")</TD
+></TR
+><TR
+><TD
+>parallel</TD
+><TD
+>PAR</TD
+><TD
+>Parallel port support</TD
+></TR
+><TR
+><TD
+>PCI</TD
+><TD
+>PCI</TD
+><TD
+>i440FX PCI bridge</TD
+></TR
+><TR
+><TD
+>pci2isa</TD
+><TD
+>P2ISA</TD
+><TD
+>PCI-to-ISA bridge</TD
+></TR
+><TR
+><TD
+>pcidev</TD
+><TD
+>PCIDEV</TD
+><TD
+>Host PCI device mapping</TD
+></TR
+><TR
+><TD
+>pcipnic</TD
+><TD
+>PNIC</TD
+><TD
+>PCI pseudo NIC</TD
+></TR
+><TR
+><TD
+>pci_ide</TD
+><TD
+>PIDE</TD
+><TD
+>PCI IDE controller</TD
+></TR
+><TR
+><TD
+>pc_system</TD
+><TD
+>SYS</TD
+><TD
+>CPU-to-devices interface and timing control</TD
+></TR
+><TR
+><TD
+>PIC</TD
+><TD
+>PIC</TD
+><TD
+>Programmable interrupt controller</TD
+></TR
+><TR
+><TD
+>PIT</TD
+><TD
+>PIT</TD
+><TD
+>I/O interface for 82C54 timer</TD
+></TR
+><TR
+><TD
+>pit82c54</TD
+><TD
+>PIT81</TD
+><TD
+>82C54 timer core</TD
+></TR
+><TR
+><TD
+>PLUGIN</TD
+><TD
+>PLUGIN</TD
+><TD
+>Plugin interface</TD
+></TR
+><TR
+><TD
+>RFB</TD
+><TD
+>RFB</TD
+><TD
+>RFB gui</TD
+></TR
+><TR
+><TD
+>SB16</TD
+><TD
+>SB16</TD
+><TD
+>SB16 soundcard</TD
+></TR
+><TR
+><TD
+>SCSICD</TD
+><TD
+>SCSICD</TD
+><TD
+>SCSI CD-ROM emulation for USB</TD
+></TR
+><TR
+><TD
+>SCSIHD</TD
+><TD
+>SCSIHD</TD
+><TD
+>SCSI hard drive emulation for USB</TD
+></TR
+><TR
+><TD
+>SDL</TD
+><TD
+>SDL</TD
+><TD
+>SDL 1.2.x gui</TD
+></TR
+><TR
+><TD
+>SDL2</TD
+><TD
+>SDL2</TD
+><TD
+>SDL 2.x gui</TD
+></TR
+><TR
+><TD
+>serial</TD
+><TD
+>SER</TD
+><TD
+>Serial port emulation</TD
+></TR
+><TR
+><TD
+>serial_raw</TD
+><TD
+>SERR</TD
+><TD
+>Lowlevel serial port support</TD
+></TR
+><TR
+><TD
+>siminterface</TD
+><TD
+>SIM</TD
+><TD
+>Simulator interface</TD
+></TR
+><TR
+><TD
+>slowdown_timer</TD
+><TD
+>STIMER</TD
+><TD
+>Slowdown timer</TD
+></TR
+><TR
+><TD
+>speaker</TD
+><TD
+>PCSPK</TD
+><TD
+>Lowlevel support for the PC speaker</TD
+></TR
+><TR
+><TD
+>TERM</TD
+><TD
+>TERM</TD
+><TD
+>Term gui</TD
+></TR
+><TR
+><TD
+>unmappped</TD
+><TD
+>UNMAP</TD
+><TD
+>Unmapped I/O handler</TD
+></TR
+><TR
+><TD
+>usb_floppy</TD
+><TD
+>USBFDD</TD
+><TD
+>USB (UFI/CBI) floppy emulation</TD
+></TR
+><TR
+><TD
+>usb_ehci</TD
+><TD
+>EHCI</TD
+><TD
+>USB EHCI controller</TD
+></TR
+><TR
+><TD
+>usb_hid</TD
+><TD
+>USBHID</TD
+><TD
+>USB HID device emulation</TD
+></TR
+><TR
+><TD
+>usb_hub</TD
+><TD
+>USBHUB</TD
+><TD
+>External USB hub emulation</TD
+></TR
+><TR
+><TD
+>usb_msd</TD
+><TD
+>USBMSD</TD
+><TD
+>USB MSD (disk/cdrom) emulation</TD
+></TR
+><TR
+><TD
+>usb_ohci</TD
+><TD
+>OHCI</TD
+><TD
+>USB OHCI controller</TD
+></TR
+><TR
+><TD
+>usb_printer</TD
+><TD
+>USBPR</TD
+><TD
+>USB printer emulation</TD
+></TR
+><TR
+><TD
+>usb_uhci</TD
+><TD
+>UHCI</TD
+><TD
+>USB UHCI controller</TD
+></TR
+><TR
+><TD
+>usb_xhci</TD
+><TD
+>XHCI</TD
+><TD
+>USB xHCI controller</TD
+></TR
+><TR
+><TD
+>VGA</TD
+><TD
+>VGA</TD
+><TD
+>Standard VGA</TD
+></TR
+><TR
+><TD
+>vgabios</TD
+><TD
+>VBIOS</TD
+><TD
+>VGA BIOS</TD
+></TR
+><TR
+><TD
+>virt_timer</TD
+><TD
+>VTIMER</TD
+><TD
+>Virtual timer</TD
+></TR
+><TR
+><TD
+>WINGUI</TD
+><TD
+>WINGUI</TD
+><TD
+>WIN32 gui</TD
+></TR
+><TR
+><TD
+>WX</TD
+><TD
+>WX</TD
+><TD
+>wxWidgets gui</TD
+></TR
+><TR
+><TD
+>XGUI</TD
+><TD
+>XGUI</TD
+><TD
+>X11 gui</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="debugger-gui.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="diskimagehowto.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The Bochs debugger gui</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>How to make a simple disk image</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

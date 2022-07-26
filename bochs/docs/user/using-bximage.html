@@ -1,0 +1,371 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Using the bximage tool</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs User Manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Tips and Techniques"
+HREF="howto.html"><LINK
+REL="PREVIOUS"
+TITLE="Disk Image Modes"
+HREF="harddisk-modes.html"><LINK
+REL="NEXT"
+TITLE="Guest operating systems"
+HREF="guests.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs User Manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="harddisk-modes.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. Tips and Techniques</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="guests.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="USING-BXIMAGE"
+>9.22. Using the bximage tool</A
+></H1
+><P
+>Bximage is an easy to use console based tool for creating, converting and
+resizing disk images, particularly for use with Bochs. It also supports
+committing redolog files to their base images. It is completely interactive
+if no command line arguments are used. It can be switched to a non-interactive
+mode  if all required parameters are given in the command line.</P
+><P
+>When you run bximage without one of the following options, it will appear in
+interactive  mode and ask for all required parameters to manipulate an image.
+<PRE
+CLASS="SCREEN"
+>Usage: bximage [options] [filename1] [filename2]
+
+Supported options:
+  -func=...     operation to perform (create, convert, resize, commit, info)
+  -fd=...       create: floppy image with size code
+  -hd=...       create/resize: hard disk image with size in megabytes (M)
+                or gigabytes (G)
+  -imgmode=...  create/convert: hard disk image mode
+  -b            convert/resize: create a backup of the source image
+                commit: create backups of the base image and redolog file
+  -q            quiet mode (don't prompt for user input)
+  --help        display this help and exit
+
+Other arguments:
+  filename1     create:  new image file
+                convert/resize: source image file
+                commit:  base image file
+  filename2     convert/resize: destination image file
+                commit:  redolog (journal) file</PRE
+>
+<DIV
+CLASS="TABLE"
+><A
+NAME="AEN5114"
+></A
+><P
+><B
+>Table 9-6. Bximage: supported disk images modes (formats)</B
+></P
+><TABLE
+BORDER="1"
+RULES="all"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>Mode</TH
+><TH
+>Create / Resize / Convert target</TH
+><TH
+>Convert source / Commit base</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>flat</TD
+><TD
+>Yes</TD
+><TD
+>Yes</TD
+></TR
+><TR
+><TD
+>concat</TD
+><TD
+>Create only</TD
+><TD
+>Convert source only</TD
+></TR
+><TR
+><TD
+>dll</TD
+><TD
+>No</TD
+><TD
+>Convert source only</TD
+></TR
+><TR
+><TD
+>sparse</TD
+><TD
+>Yes</TD
+><TD
+>Yes</TD
+></TR
+><TR
+><TD
+>vmware3</TD
+><TD
+>No</TD
+><TD
+>Yes</TD
+></TR
+><TR
+><TD
+>vmware4</TD
+><TD
+>Yes</TD
+><TD
+>Yes</TD
+></TR
+><TR
+><TD
+>growing</TD
+><TD
+>Yes</TD
+><TD
+>Yes</TD
+></TR
+><TR
+><TD
+>vpc</TD
+><TD
+>Yes</TD
+><TD
+>Yes</TD
+></TR
+><TR
+><TD
+>vbox</TD
+><TD
+>No</TD
+><TD
+>Yes</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+><P
+>Disk image mode autodetection does not work for the modes <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>concat</I
+></SPAN
+>
+and <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>dll</I
+></SPAN
+>. To use those images as convert source, you have to
+add a prefix ("concat:" or "dll:") to the image path.</P
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5162"
+>9.22.1. Create image</A
+></H2
+><P
+>This function can be used to create several disk image formats for the
+use with Bochs. See the table above for supported formats (modes).
+For an example of the usage, refer to <A
+HREF="diskimagehowto.html"
+>Section 9.2</A
+>.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5166"
+>9.22.2. Convert image</A
+></H2
+><P
+>With this function a disk image can be converted from one mode (format)
+to another. The type of the source image is auto-detected. For the target
+format it supports the same disk image modes as the create function. If the
+name of the new image file is not specified or identical to the source one
+and you have enabled the backup switch, a backup of the source file will be
+created with it's original name plus the suffix ".orig".</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5169"
+>9.22.3. Resize image</A
+></H2
+><P
+>This function can be used to increase the virtual disk size of an image.
+It supports the same disk image modes as the create function.
+Making a disk image smaller is not supported, since it may damage the
+disk and data will be lost. If the name of the new image file is not
+specified or identical to the source one and you have enabled the backup
+switch, a backup of the source file will be created with it's original name
+plus the suffix ".orig".</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5172"
+>9.22.4. Commit 'undoable' redolog to base image</A
+></H2
+><P
+>The type of the base image is auto-detected. The name of the redolog
+file only needs to be specified if it is not based on the base image.
+If you have enabled the backup switch, backups of the original base and
+redolog files will still be created with their original name plus the
+suffix ".orig".</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5175"
+>9.22.5. Disk image info</A
+></H2
+><P
+>This function can be used to determine the disk image format, geometry
+and size. Note that Bochs can only detect the formats growing, sparse,
+vmware3, vmware4, vpc and vbox correctly. Other images with a file size
+multiple of 512 are treated as flat ones. If the image doesn't support
+returning the geometry, the cylinders are calculated based on 16 heads
+and 63 sectors per track.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="harddisk-modes.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="guests.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Disk Image Modes</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="howto.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Guest operating systems</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

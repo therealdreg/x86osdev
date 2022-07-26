@@ -1,0 +1,14 @@
+with cygin terminal:
+
+apt-cyg install make gcc-core gcc-g++ patch bzip2 perl tar xz automake cmake unzip zip
+
+sh .conf.win64-vcpp
+
+Install Visual Studio 2013
+
+with cmd:
+
+"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\amd64\vcvars64.bat"
+
+nmake all-clean
+nmake

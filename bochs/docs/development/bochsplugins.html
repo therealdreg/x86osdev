@@ -1,0 +1,693 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The Bochs plugin interface</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs Developers Guide"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="About the code"
+HREF="about-the-code.html"><LINK
+REL="PREVIOUS"
+TITLE="The Bochs BIOS"
+HREF="bochsbios.html"><LINK
+REL="NEXT"
+TITLE="Advanced debugger usage"
+HREF="debugger-advanced.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs Developers Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="bochsbios.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. About the code</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="debugger-advanced.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="BOCHSPLUGINS"
+>2.14. The Bochs plugin interface</A
+></H1
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN1548"
+>2.14.1. Introduction</A
+></H2
+><P
+>By default Bochs is compiled as one single executable file providing all
+features enabled at compile time. To add a new feature (device, gui, driver)
+several files need to be modified (configure script, makefile, some headers)
+and the complete build process must be performed. As an alternative, Bochs
+can be compiled as an executable file containing the core funtionality and a
+number of loadable modules providing config interface, device emulation,
+display library (gui) capabilities or drivers for some other features. On
+Windows platforms such a module is called DLL, other platforms like Linux call
+it shared library and use <B
+CLASS="COMMAND"
+>libtool</B
+> to create it. Bochs uses
+the environment variable LTDL_LIBARY_PATH to search for plugins. To build Bochs
+in this mode, the configure option <CODE
+CLASS="OPTION"
+>--enable-plugins</CODE
+> must be
+used. In this mode it is possible to add externally developed extensions (AKA
+"user plugins") that can be detected at startup. Rebuilding the whole project
+is not necessary in that case. Basically these Bochs facilities are currently
+supported by the plugin interface:
+<P
+></P
+><UL
+><LI
+><P
+>config interface</P
+></LI
+><LI
+><P
+>i/o device</P
+></LI
+><LI
+><P
+>pluggable USB device</P
+></LI
+><LI
+><P
+>display library (gui)</P
+></LI
+><LI
+><P
+>disk image format (mode)</P
+></LI
+><LI
+><P
+>networking module</P
+></LI
+><LI
+><P
+>lowlevel sound module</P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN1568"
+>2.14.2. Plugin file names</A
+></H2
+><P
+>The plugin interface expects a special file name format that depends on the
+plugin type and platform. On Linux and other platforms using
+<B
+CLASS="COMMAND"
+>libtool</B
+>-based compilation the plugin file for the CMOS
+device gets this name:
+<PRE
+CLASS="SCREEN"
+>libbx_cmos.so</PRE
+>
+On Windows platforms (Cygwin, MinGW/MSYS, MSVC) the output file is a DLL and
+the name is slightly different:
+<PRE
+CLASS="SCREEN"
+>bx_cmos.dll</PRE
+>
+The names of device plugins are created from the base name of source files like
+the example above. For other module types the naming is similar, but with some
+extensions. This table shows how the names of some existing modules are created:
+<DIV
+CLASS="TABLE"
+><A
+NAME="AEN1574"
+></A
+><P
+><B
+>Table 2-11. Plugin file naming</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><COL><COL><COL><THEAD
+><TR
+><TH
+>Type</TH
+><TH
+>Module name</TH
+><TH
+>Source file name</TH
+><TH
+>Libtool file name</TH
+><TH
+>DLL file name</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>Display library</TD
+><TD
+>sdl2</TD
+><TD
+>sdl2.cc</TD
+><TD
+>libbx_sdl2_gui.so</TD
+><TD
+>bx_sdl2_gui.dll</TD
+></TR
+><TR
+><TD
+>Disk image module</TD
+><TD
+>vbox</TD
+><TD
+>vbox.cc</TD
+><TD
+>libbx_vbox_img.so</TD
+><TD
+>bx_vbox_img.dll</TD
+></TR
+><TR
+><TD
+>Networking module</TD
+><TD
+>slirp</TD
+><TD
+>eth_slirp.cc</TD
+><TD
+>libbx_eth_slirp.so</TD
+><TD
+>bx_eth_slirp.dll</TD
+></TR
+><TR
+><TD
+>Lowlevel sound driver</TD
+><TD
+>file</TD
+><TD
+>soundfile.cc</TD
+><TD
+>libbx_soundfile.so</TD
+><TD
+>bx_soundfile.dll</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN1609"
+>2.14.3. Plugin types</A
+></H2
+><P
+>Device plugins are categorized into some types depending on their purpose. Some
+devices are mandatory for the x86 PC emulation or need to be initialized early
+to make other devices work correctly. A plugin can be loaded only one single
+time, but some types may be capable to create multiple objects. This is the full
+list of plugin types defined in <TT
+CLASS="FILENAME"
+>extplugin.h</TT
+> with some
+description:
+<DIV
+CLASS="TABLE"
+><A
+NAME="AEN1613"
+></A
+><P
+><B
+>Table 2-12. Plugin types</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><COL><COL><COL><THEAD
+><TR
+><TH
+>Type</TH
+><TH
+>Description</TH
+><TH
+>Entry function name</TH
+><TH
+>Base C++ class used</TH
+><TH
+>Remarks</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>PLUGTYPE_CORE</TD
+><TD
+>Core device plugin, always required or depending on core option, highest priority in init order</TD
+><TD
+>lib<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_plugin_entry</TD
+><TD
+>bx_devmodel_c</TD
+><TD
+>Single device only</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_STANDARD</TD
+><TD
+>Device plugin, mostly required or depending on core plugins, lower priority in init order</TD
+><TD
+>lib<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_plugin_entry</TD
+><TD
+>bx_devmodel_c</TD
+><TD
+>Single device only</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_OPTIONAL</TD
+><TD
+>Device plugin depending on normal config option</TD
+><TD
+>lib<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_plugin_entry</TD
+><TD
+>bx_devmodel_c</TD
+><TD
+>Network device plugins can create up to 4 instances</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_VGA</TD
+><TD
+>VGA-compatible device plugin selected with <CODE
+CLASS="OPTION"
+>vga: extension=X</CODE
+> option</TD
+><TD
+>lib<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_plugin_entry</TD
+><TD
+>bx_vgacore_c</TD
+><TD
+>One plugin of type required / supported</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_USB</TD
+><TD
+>USB device plugin selected with the port<TT
+CLASS="REPLACEABLE"
+><I
+>X</I
+></TT
+> parameter of the host controller option</TD
+><TD
+>lib<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_plugin_entry</TD
+><TD
+>usb_device_c</TD
+><TD
+>Number of instances not limited</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_CI</TD
+><TD
+>Config interface plugin selected with the <CODE
+CLASS="OPTION"
+>config_interface</CODE
+> option</TD
+><TD
+>lib<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_gui_plugin_entry</TD
+><TD
+>-</TD
+><TD
+>One plugin of type required / supported</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_GUI</TD
+><TD
+>Display library (gui) plugin selected with the <CODE
+CLASS="OPTION"
+>display_library</CODE
+> option</TD
+><TD
+>lib<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_gui_plugin_entry</TD
+><TD
+>bx_gui_c</TD
+><TD
+>One plugin of type required / supported</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_IMG</TD
+><TD
+>Additional disk image format selected with the "mode" parameter when setting up a disk image</TD
+><TD
+>lib<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_img_plugin_entry</TD
+><TD
+>device_image_t</TD
+><TD
+>Number of instances not limited</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_NET</TD
+><TD
+>Networking driver / emulation module selected with the "ethmod" parameter of the NIC options</TD
+><TD
+>libeth_<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_plugin_entry</TD
+><TD
+>eth_pktmover_c</TD
+><TD
+>Some modules can create multiple instances</TD
+></TR
+><TR
+><TD
+>PLUGTYPE_SND</TD
+><TD
+>Sound driver selected with the sound option</TD
+><TD
+>libsound<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>module</I
+></SPAN
+>_plugin_entry</TD
+><TD
+>bx_sound_lowlevel_c</TD
+><TD
+>One plugin of type required / max. 4 different plugins supported</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN1698"
+>2.14.4. The plugin entry function</A
+></H2
+><P
+>Each plugin has an entry function that is called during plugin detection, after
+loading and before unloading the modules. For compatiblity with the "monolithic"
+Bochs compilation each plugin must have a unique name. When plugins are disabled,
+the macros / functions for loading / unloading the plugin directly call the
+plugin entry function. The entry function can be called with these mode
+arguments:
+<P
+></P
+><UL
+><LI
+><P
+>PLUGIN_PROBE returns the plugin type as defined above (mandatory for all plugins)</P
+></LI
+><LI
+><P
+>PLUGIN_FLAGS returns flags associated with the plugin</P
+></LI
+><LI
+><P
+>PLUGIN_INIT is called after loading the plugin</P
+></LI
+><LI
+><P
+>PLUGIN_FINI is called before unloading the plugin</P
+></LI
+></UL
+>
+At Bochs startup, but before initializing the config options, it searches the
+plugin paths for modules with the correct file name format and the expected
+entry function name. Each valid plugin is temporarily loaded to read the plugin
+type and flags by calling the entry function with the corresponding mode. The
+plugin interface builds up a database with all information for loading detected
+modules later on demand. A plugin can return multiple types, but it can only be
+loaded with one of it (currently used by the "wx" gui and "voodoo" device
+plugin). The flags can be used to indicate specific capabilities of the plugin
+(currently on used for device plugins that can be connected to a PCI slot). For
+unimplemented calling modes the entry function must return 0.</P
+><P
+>To simplify the naming of the plugin entry function some macros have been
+defined. This example shows how the entry function is defined for normal device
+plugins on platforms other than Windows:
+<PRE
+CLASS="SCREEN"
+>#define PLUGIN_ENTRY_FOR_MODULE(mod) \
+  extern "C" int CDECL lib##mod##_plugin_entry(plugin_t *plugin, Bit16u type, Bit8u mode)</PRE
+>
+Please see <TT
+CLASS="FILENAME"
+>plugin.h</TT
+> for all supported definitions of the
+entry function. The example below shows the plugin-related section
+of the "unmapped" device source file.
+<PRE
+CLASS="SCREEN"
+>// Define BX_PLUGGABLE in files that can be compiled into plugins.  For
+// platforms that require a special tag on exported symbols, BX_PLUGGABLE
+// is used to know when we are exporting symbols and when we are importing.
+#define BX_PLUGGABLE
+#include "iodev.h"
+#include "unmapped.h"
+
+#define LOG_THIS theUnmappedDevice-&#62;
+
+bx_unmapped_c *theUnmappedDevice = NULL;
+
+PLUGIN_ENTRY_FOR_MODULE(unmapped)
+{
+  if (mode == PLUGIN_INIT) {
+    theUnmappedDevice = new bx_unmapped_c();
+    BX_REGISTER_DEVICE_DEVMODEL(plugin, type, theUnmappedDevice, BX_PLUGIN_UNMAPPED);
+  } else if (mode == PLUGIN_FINI) {
+    delete theUnmappedDevice;
+  } else if (mode == PLUGIN_PROBE) {
+    return (int)PLUGTYPE_OPTIONAL;
+  }
+  return(0); // Success
+}</PRE
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN1714"
+>2.14.5. Compatibility with "monolithic" Bochs compilation</A
+></H2
+><P
+>To ensure compatibility between both compilation modes a bunch of macros have
+been defined in <TT
+CLASS="FILENAME"
+>plugin.h</TT
+>. If required the specific functions
+are implemented in <TT
+CLASS="FILENAME"
+>plugin.cc</TT
+>. That's why the code for the
+modules that can be plugins doesn't need special cases for "plugin" and
+"non-plugin" mode. For the plugin types PLUGTYPE_CORE and PLUGTYPE_STANDARD the
+macros for loading / unloading plugin directly call the entry function. For the
+other types a static list is created at compile time using a modified version
+of the <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>plugin_t</I
+></SPAN
+> structure. This is the counterpart to the
+dynamic list in plugin mode created at startup. The load / unload functions are
+similar in both modes, except that the "non-plugin" version of these functions
+finally just call the entry function. These macros are defined for both modes,
+but calling mode specific code:
+<PRE
+CLASS="SCREEN"
+>PLUG_load_plugin(name,type)
+PLUG_get_plugins_count(type)
+PLUG_get_plugin_name(type,index)
+PLUG_get_plugin_flags(type,index)
+PLUG_load_plugin_var(name,type)
+PLUG_load_opt_plugin(name)
+PLUG_unload_opt_plugin(name)</PRE
+></P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="bochsbios.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="debugger-advanced.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The Bochs BIOS</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="about-the-code.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Advanced debugger usage</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

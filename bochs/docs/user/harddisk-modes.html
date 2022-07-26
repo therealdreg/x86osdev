@@ -1,0 +1,1568 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Disk Image Modes</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Bochs User Manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Tips and Techniques"
+HREF="howto.html"><LINK
+REL="PREVIOUS"
+TITLE="Notes about Voodoo Graphics usage"
+HREF="voodoo-notes.html"><LINK
+REL="NEXT"
+TITLE="Using the bximage tool"
+HREF="using-bximage.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bochs User Manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="voodoo-notes.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. Tips and Techniques</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="using-bximage.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="HARDDISK-MODES"
+>9.21. Disk Image Modes</A
+></H1
+><P
+>Bochs can handle independent disk image format for each
+disk present on the ata interfaces.
+
+The disk image type is selected in the configuration file
+by the "mode" option of the ataX-xxx directives.
+Example:
+
+<PRE
+CLASS="SCREEN"
+>ata0-master: type=disk, mode=flat, path=10M.sample, cylinders=306, heads=4, spt=17</PRE
+></P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>If unspecified, the default "mode" is flat.</P
+></BLOCKQUOTE
+></DIV
+><P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN4718"
+></A
+><P
+><B
+>Table 9-5. Supported Disk Modes</B
+></P
+><TABLE
+BORDER="1"
+RULES="all"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>Name</TH
+><TH
+>Description</TH
+><TH
+>Features</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+> flat </TD
+><TD
+> one file, flat layout </TD
+><TD
+>       accessible with mtools or winimage-like tools
+       </TD
+></TR
+><TR
+><TD
+> concat </TD
+><TD
+> multiple files, concatenated </TD
+><TD
+>       mappable to contained partitions
+       </TD
+></TR
+><TR
+><TD
+> dll </TD
+><TD
+> accessed through a DLL </TD
+><TD
+>       developer specific, win32 / win64 only
+       </TD
+></TR
+><TR
+><TD
+> sparse </TD
+><TD
+> up to 10 layers stackable files </TD
+><TD
+>       commitable, rollbackable, growing
+       </TD
+></TR
+><TR
+><TD
+> vmware3 </TD
+><TD
+> vmware3 disk support </TD
+><TD
+>       vmware version 3 compatibility
+       </TD
+></TR
+><TR
+><TD
+> vmware4 </TD
+><TD
+> vmware4 disk support </TD
+><TD
+>       vmware version 4 (VMDK) compatibility
+       </TD
+></TR
+><TR
+><TD
+> undoable </TD
+><TD
+> read-only base file with a commitable redolog </TD
+><TD
+>       commitable, rollbackable
+       </TD
+></TR
+><TR
+><TD
+> growing </TD
+><TD
+>  one growing file </TD
+><TD
+> growing
+       </TD
+></TR
+><TR
+><TD
+> volatile </TD
+><TD
+> read-only base file with a volatile redolog </TD
+><TD
+>       always rollbacked
+       </TD
+></TR
+><TR
+><TD
+> vpc </TD
+><TD
+> VirtualPC disk support </TD
+><TD
+>       fixed / dynamic size supported
+       </TD
+></TR
+><TR
+><TD
+> vbox </TD
+><TD
+> Oracle(tm) VM VirtualBox disk support </TD
+><TD
+>       VDI version 1.1 fixed / dynamic size supported
+       </TD
+></TR
+><TR
+><TD
+> vvfat </TD
+><TD
+> local directory appears as VFAT disk (with volatile redolog) </TD
+><TD
+>       optional commit or rollback
+       </TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="HARDDISK-MODE-FLAT"
+>9.21.1. flat</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4778"
+>9.21.1.1. description</A
+></H3
+><P
+>In flat mode, all sectors of the harddisk are stored in one flat file,
+in lba order.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4781"
+>9.21.1.2. image creation</A
+></H3
+><P
+>Flat disk images can be created with the bximage utility
+(see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> for more information).</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4785"
+>9.21.1.3. path</A
+></H3
+><P
+>The "path" option of the ataX-xxx directive in the configuration file
+must point to the flat image file.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="HARDDISK-MODE-FLAT-TOOLS"
+>9.21.1.4. external tools</A
+></H3
+><P
+>Flat images content can be accessed from the host by the
+following tools :
+<P
+></P
+><UL
+><LI
+><P
+> mtools (see <A
+HREF="mtools.html"
+>Section 9.3</A
+>)</P
+></LI
+><LI
+><P
+> mount with a loopback (see <A
+HREF="loop-device-usage.html"
+>Section 9.8</A
+>) </P
+></LI
+><LI
+><P
+> Winimage / DiskExplorer (see <A
+HREF="winimage.html"
+>Section 9.5</A
+>) </P
+></LI
+><LI
+><P
+> Bochs Tools (see <A
+HREF="bochs-linux-disktools.html"
+>Section 9.4</A
+>) </P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4804"
+>9.21.1.5. typical use</A
+></H3
+><P
+>Flat mode is Bochs default harddisk layout. This is also
+the layout of disk images provided on Bochs websites.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4807"
+>9.21.1.6. limitations</A
+></H3
+><P
+>On some host OSes, Bochs flat disk images are limited to 2GiB.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN4810"
+>9.21.2. concat</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4813"
+>9.21.2.1. description</A
+></H3
+><P
+>In concat mode, all sectors of the harddisk are stored in several flat files,
+in lba order.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4816"
+>9.21.2.2. image creation</A
+></H3
+><P
+>Disk images for the usage in 'concat' mode can be created as 'flat' mode image
+files with the bximage utility (see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> for more
+information).</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4820"
+>9.21.2.3. path</A
+></H3
+><P
+>The "path" option of the ataX-xxx directive in the configuration file
+must point to the first file (e.g. win95-1). The lower layer files names are
+found by adding 1 to the last character (e.g. win95-2, win95-3, etc.).</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4823"
+>9.21.2.4. external tools</A
+></H3
+><P
+>If every single file contains a complete partition, they can be accessed
+with same tools as the 'flat' mode images.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4826"
+>9.21.2.5. typical use</A
+></H3
+><P
+>If the partition sizes and file sizes are set up correctly, this allows you to
+store each partition in a separate file, which is very convenient if you want
+to operate on a single partition (e.g. mount with loopback, create file system,
+fsck, etc.).</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4829"
+>9.21.2.6. limitations</A
+></H3
+><P
+>On some host OSes, there is a limit of 2GiB per file.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN4832"
+>9.21.3. dll</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4835"
+>9.21.3.1. description</A
+></H3
+><P
+>This mode is only useful for developers and needs an additional win32 / win64
+DLL loaded by Bochs at runtime.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN4838"
+>9.21.4. sparse</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4841"
+>9.21.4.1. description</A
+></H3
+><P
+>    Sparse disk support has been added by JustinSB. Sparse disk features are:
+    <P
+></P
+><UL
+><LI
+><P
+>        Large hard drive can be created, and only used space will be stored
+        in the file.  In practice, on Unix, this is not a large gain as it is
+        done anyway.
+        </P
+></LI
+><LI
+><P
+>        Multiple sparse drive images can be mounted on top of each other.
+        Writes go to the top image.  This allows several similar configurations
+        to share a master "base" file, and also allows file system rollback or
+        no-write options.  Up to 10 disk images can be layered on top of each other.
+        </P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4849"
+>9.21.4.2. image creation</A
+></H3
+><P
+>Sparse disk images must be created with the bximage utility
+(see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> for more information).
+Be sure to enter "sparse" when selecting the image type.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4853"
+>9.21.4.3. path</A
+></H3
+><P
+>The "path" option of the ataX-xxx directive in the configuration file
+must point to the top layered file. The lower layer files names are found by
+substracting 1 from the last character (must be a digit)</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4856"
+>9.21.4.4. external tools</A
+></H3
+><P
+>The bximage utility (see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> provides convert and
+resize support for "sparse" mode images.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4860"
+>9.21.4.5. typical use</A
+></H3
+><DIV
+CLASS="SECTION"
+><H4
+CLASS="SECTION"
+><A
+NAME="AEN4862"
+>9.21.4.5.1. Space Saving</A
+></H4
+><P
+>    Create a sparse disk image using bximage.  Set size to eg 10GB.
+    Only allocated space will be stored,
+    so your drive image should be only about as large as the files stored on it.
+  </P
+></DIV
+><DIV
+CLASS="SECTION"
+><H4
+CLASS="SECTION"
+><A
+NAME="AEN4865"
+>9.21.4.5.2. Disk Rollback</A
+></H4
+><P
+>    <P
+></P
+><UL
+><LI
+><P
+>          Create a sparse disk image called "c.img.0".  Point .bochsrc at "c.img.0".
+          In bochs, install your favorite OS.  Switch off bochs.
+        </P
+></LI
+><LI
+><P
+>          Create a sparse disk image (of the same size)
+          and name it "c.img.1".  Point .bochsrc at "c.img.1"
+          "c.img.0" is visible, but all writes go to "c.img.1".
+          After using bochs, you can simply delete
+          "c.img.1" to undo changes and go back to a clean OS install.
+        </P
+></LI
+></UL
+>
+  </P
+></DIV
+><DIV
+CLASS="SECTION"
+><H4
+CLASS="SECTION"
+><A
+NAME="AEN4873"
+>9.21.4.5.3. Disk Optional Commit</A
+></H4
+><P
+>    <P
+></P
+><UL
+><LI
+><P
+>          Create a sparse disk image called "c.img.0".  Point .bochsrc at "c.img.0".
+          In bochs, install your favorite OS.  Switch off bochs.
+        </P
+></LI
+><LI
+><P
+>          Create a sparse disk image (of the same size) and name it "c.img.1".
+          Point .bochsrc at "c.img.1"
+          "c.img.0" is visible, but all writes go to "c.img.1".
+          After using bochs, if you want to keep the
+          changes, use the (currently non-existent) merge utility
+          to make a single unified drive image.
+        </P
+></LI
+><LI
+><P
+>          Alternatively simply create a new partition on top called "c.img.2".
+        </P
+></LI
+></UL
+>
+  </P
+></DIV
+><DIV
+CLASS="SECTION"
+><H4
+CLASS="SECTION"
+><A
+NAME="AEN4883"
+>9.21.4.5.4. Common Base</A
+></H4
+><P
+></P
+><UL
+><LI
+><P
+>          Create a sparse disk image called "base.img".  Point .bochsrc at "base.img".
+          In bochs, install your favorite OS.  Switch off bochs.
+        </P
+></LI
+><LI
+><P
+>          Create a sparse disk image (of the same size) and name it "www.img.1".
+          Make "wwww.img.0" a symlink to
+          "base.img".  Point .bochsrc at "www.img.1". Using bochs, install a webserver.
+        </P
+></LI
+><LI
+><P
+>          Create a symlink to "base.img" called "db.img.0".
+          Create a sparse disk image (of the same size)
+          and name it "db.img.1".  Point .bochsrc at "db.img.1".
+          Using bochs, install a database server.
+        </P
+></LI
+></UL
+><P
+>     Now both a database server and webserver can be
+     run in separate virtual machines, but they share the common OS image,
+     saving drive space.
+    </P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4893"
+>9.21.4.6. limitations</A
+></H3
+><P
+>  There is a need for supporting utilities (yet unwritten) :
+  <P
+></P
+><UL
+><LI
+><P
+>to merge two sparse disk images into a single image </P
+></LI
+><LI
+><P
+>to defragment a sparse disk image and remove unused space </P
+></LI
+></UL
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN4901"
+>9.21.5. vmware3 / vmware4</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4904"
+>9.21.5.1. description</A
+></H3
+><P
+>Sharvil Nanavati has added vmware3/4 disk image support into Bochs
+for Net Integration Technologies, Inc.
+You should be able to use disk images created by vmware version 3 and 4.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4907"
+>9.21.5.2. image creation</A
+></H3
+><P
+>Create such disk image with vmware version 3 or 4.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4910"
+>9.21.5.3. path</A
+></H3
+><P
+>The "path" option of the ataX-xxx directive in the configuration file
+must point to the vmware3/4 disk image.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4913"
+>9.21.5.4. external tools</A
+></H3
+><P
+><IMG
+SRC="../images/undercon.png"> In addition to the utilities provided by VMware Inc. some other freeware
+tools are available.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4917"
+>9.21.5.5. typical use</A
+></H3
+><P
+>If you want to use an existing vmware3/4 disk image.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4920"
+>9.21.5.6. limitations</A
+></H3
+><P
+>Only vmware versions 3 and 4 disk image files are supported.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN4923"
+>9.21.6. undoable</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4926"
+>9.21.6.1. description</A
+></H3
+><P
+>    Undoable disks are commitable/rollbackable disk images.
+    An undoable disk is based on a read-only image, associated
+    with a growing redolog, that contains all changes (writes)
+    made to the base image content. Currently, base images of
+    types 'flat', 'sparse', 'growing', 'vmware3', 'vmware4' and
+    'vpc' are supported.</P
+><P
+>    This redolog is dynamically created at runtime, if it does not
+    previously exists.</P
+><P
+>    All writes go to the redolog, reads are done from the
+    redolog if previously written, or from the base file
+    otherwise.</P
+><P
+>    If unspecified with the "journal" option of the ataX-xxx directive,
+    the redolog file name is created by adding a ".redolog"
+    suffix to the base image name.</P
+><P
+>    File size of the redolog can grow up to the total disk
+    size plus a small overhead due to internal data management
+    (about 3% for a 32MiB disk,
+    less than 0.5% for a 2GiB disk).</P
+><P
+>    After a run, the redolog will still be present, so the changes
+    are still visible the next time you run Bochs with this disk image.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4934"
+>9.21.6.2. image creation</A
+></H3
+><P
+>    The base disk images must be created with the bximage utility
+    (see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> for more information).
+    The redolog file is created automatically if it doesn't exist.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4938"
+>9.21.6.3. path</A
+></H3
+><P
+>    The "path" option of the ataX-xxx directive in the configuration file
+    must be the base image name. The redolog name can be set with the "journal"
+    option of the same directive. If not set, the redolog name is created by
+    adding the ".redolog" suffix to the base image name.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4941"
+>9.21.6.4. external tools</A
+></H3
+><P
+>    To access the 'flat' mode base disk image content,
+    see <A
+HREF="harddisk-modes.html#HARDDISK-MODE-FLAT-TOOLS"
+>Section 9.21.1.4</A
+> for available tools.</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>    The up-to-date content can only be seen after you commit the redolog
+    to the flat file with the bximage utility.</P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4947"
+>9.21.6.5. typical use</A
+></H3
+><P
+></P
+><UL
+><LI
+><P
+><B
+CLASS="COMMAND"
+>Commit</B
+></P
+><P
+>    After a run, the redolog can be committed (merged)
+    to the base image with the bximage utility.</P
+></LI
+><LI
+><P
+><B
+CLASS="COMMAND"
+>Rollback</B
+></P
+><P
+>    After a run, the redolog can be rollbacked (discarded)
+    by simply deleting the redolog file.</P
+></LI
+><LI
+><P
+><B
+CLASS="COMMAND"
+>Common Base</B
+></P
+><P
+>    One base disk image with a guest OS installed can be used to install
+    different software as described above for the "sparse" disk image mode.</P
+></LI
+><LI
+><P
+><B
+CLASS="COMMAND"
+>Harddisk Image on a Read-Only Medium</B
+></P
+><P
+>    In the 'undoable' mode, the base file is always opened in read-only mode,
+    so it can safely be stored on a read-only medium (for example on a cdrom).
+    In that case it is recommended to specify the redolog file with the
+    "journal" option.</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4966"
+>9.21.6.6. limitations</A
+></H3
+><P
+>    The "undoable" disk depends on the limitations of base disk image used.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN4969"
+>9.21.7. growing</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4972"
+>9.21.7.1. description</A
+></H3
+><P
+>    Growing disk images start as a small files, and
+    grow whenever new data is written to them.
+    </P
+><P
+>    Once a sector is
+    written in the growing file, subsequent writes to the same
+    sector will happen in place.
+    </P
+><P
+>    File size of Growing disk images can go up to the total disk
+    size plus a small overhead due to internal data management.
+    (about 3% for a 32MiB disk,
+    less than 0.5% for a 2GiB disk).
+    </P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4977"
+>9.21.7.2. image creation</A
+></H3
+><P
+>Growing disk images must be created with the bximage utility
+(see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> for more information).
+Be sure to enter "growing" when selecting the image type.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4981"
+>9.21.7.3. path</A
+></H3
+><P
+>    The "path" option of the ataX-xxx directive in the configuration file
+    must be the growing image name.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4984"
+>9.21.7.4. external tools</A
+></H3
+><P
+>    The bximage utility (see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> provides convert
+    and resize support for "growing" mode images.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4988"
+>9.21.7.5. typical use</A
+></H3
+><P
+>    Growing disk images can be used whenever you want to maximize disk space.
+    However, please note that Bochs will not check if enough disk space is
+    available before writing new data. If no disk space is available, a panic
+    will occur.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4991"
+>9.21.7.6. limitations</A
+></H3
+><P
+>    The size of the virtual disk is currently limited to 8 TB, but the maximum size
+    of the image file depends on host OS limitations.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN4994"
+>9.21.8. volatile</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN4997"
+>9.21.8.1. description</A
+></H3
+><P
+>    Volatile disks are always-rollbacked disk images.
+    An volatile disk is based on a read-only image, associated with
+    a growing redolog, that contains all changes (writes)
+    made to the base image content. Currently, base images of
+    types 'flat', 'sparse', 'growing', 'vmware3', 'vmware4', 'vpc' and
+    'vbox' are supported.</P
+><P
+>    The redolog is dynamically created at runtime, when
+    Bochs starts, and is deleted when Bochs closes (win32)
+    or just after it has been created (Unix).</P
+><P
+>    All writes go to the redolog, reads are done from the
+    redolog if previously written, or from the base file
+    otherwise.</P
+><P
+>    If unspecified with the "journal" option of the ataX-xxx directive,
+    the redolog file name is created by adding a ".redolog"
+    suffix to the base image name.</P
+><P
+>    File size of the redolog can grow up to the total disk
+    size plus a small overhead due to internal data management
+    (about 3% for a 32MiB disk,
+    less than 0.5% for a 2GiB disk).</P
+><P
+>    After a run, the redolog is not any more present, so the changes
+    are discarded.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5005"
+>9.21.8.2. image creation</A
+></H3
+><P
+>    The base disk images must be created with the bximage utility
+    (see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> for more information).
+    The temporary redolog file is created automatically.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5009"
+>9.21.8.3. path</A
+></H3
+><P
+>    The "path" option of the ataX-xxx directive in the configuration file
+    must be the base image name. The redolog name can be set with the "journal"
+    option of the same directive.
+    If not set, the redolog name is created by adding the
+    ".redolog" suffix to the base image name.
+    A random suffix is also appended to the redolog name.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5012"
+>9.21.8.4. external tools</A
+></H3
+><P
+>    To access 'flat' mode base disk image content,
+    see <A
+HREF="harddisk-modes.html#HARDDISK-MODE-FLAT-TOOLS"
+>Section 9.21.1.4</A
+> for available tools.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5016"
+>9.21.8.5. typical use</A
+></H3
+><P
+></P
+><UL
+><LI
+><P
+><B
+CLASS="COMMAND"
+>Repeatable simulations</B
+></P
+><P
+>    <IMG
+SRC="../images/undercon.png"> to be completed</P
+></LI
+><LI
+><P
+><B
+CLASS="COMMAND"
+>Multiple Bochs instances</B
+></P
+><P
+>    <IMG
+SRC="../images/undercon.png"> to be completed</P
+></LI
+><LI
+><P
+><B
+CLASS="COMMAND"
+>Harddisk Image on a Read-Only Medium</B
+></P
+><P
+>    In the 'volatile' mode, the base file is always opened in read-only mode,
+    so it can safely be stored on a read-only medium (for example on a cdrom).
+    In that case it is recommended to specify the redolog file with the
+    "journal" option.</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5033"
+>9.21.8.6. limitations</A
+></H3
+><P
+>    The "volatile" disk depends on the limitations of base disk image used.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5036"
+>9.21.9. vpc</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5039"
+>9.21.9.1. description</A
+></H3
+><P
+>    The "vpc" disk image mode is mostly a port of Qemu's "vpc" block
+    driver for VirtualPC disk images (written by Alex Beregszaszi and Kevin Wolf).</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5042"
+>9.21.9.2. image creation</A
+></H3
+><P
+>    Create such disk image with Microsoft VirtualPC (tm), Qemu's disk image
+    utility (qemu-img) or bximage utility
+    (see <A
+HREF="using-bximage.html"
+>Section 9.22</A
+> for more information).</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5046"
+>9.21.9.3. path</A
+></H3
+><P
+>    The "path" option of the ataX-xxx directive in the configuration file
+    must point to the VirtualPC disk image.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5049"
+>9.21.9.4. external tools</A
+></H3
+><P
+>    Use Microsoft VirtualPC (tm) tools to manipulate these disk images.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5052"
+>9.21.9.5. typical use</A
+></H3
+><P
+>    Share disk images with VirtualPC.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5055"
+>9.21.9.6. limitations</A
+></H3
+><P
+>    The based on the Qemu code the disk size is limited to 127 GB.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5058"
+>9.21.10. vbox</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5061"
+>9.21.10.1. description</A
+></H3
+><P
+>    The "vbox" disk image mode for VirtualBox disk images (VDI version 1.1)
+    has been written by Benjamin D. Lunt.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5064"
+>9.21.10.2. image creation</A
+></H3
+><P
+>    Create such disk image with Qemu's disk image utility (qemu-img).</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5067"
+>9.21.10.3. path</A
+></H3
+><P
+>    The "path" option of the ataX-xxx directive in the configuration file
+    must point to the VirtualBox disk image.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5070"
+>9.21.10.4. external tools</A
+></H3
+><P
+>    Use VirtualBox tools to manipulate these disk images.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5073"
+>9.21.10.5. typical use</A
+></H3
+><P
+>    Share disk images with VirtualBox.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5076"
+>9.21.10.6. limitations</A
+></H3
+><P
+>    <IMG
+SRC="../images/undercon.png"> to be completed</P
+></DIV
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN5080"
+>9.21.11. vvfat</A
+></H2
+><P
+></P
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5083"
+>9.21.11.1. description</A
+></H3
+><P
+>    The "vvfat" disk image mode is mostly a port of Qemu's "virtual VFAT" block
+    driver (written by Johannes E. Schindelin). It supports the read-only part
+    of this implementation plus some additions. The structures of the
+    virtual disk are created from the contents of the specified local directory
+    when Bochs is starting. All writes to this virtual disk go to a volatile
+    redolog and when closing Bochs, the user can decide whether or not to commit
+    the changes. If "No" is seclected, all changes will be lost when Bochs quits
+    and the files of the local directory are not modified. Otherwise the changes
+    of files and directories are committed. WARNING: Don't use important data without
+    backup in the "vvfat" directory when using this "optional commit" feature.</P
+><P
+>    In addition to Qemu's "vvfat" implementation the Bochs one supports configurable
+    disk geometry, FAT32 and reading MBR and/or boot sector from file. When using
+    the autodetection feature, the CHS values 1024/16/63 (Qemu defaults) are used.
+    To use an MBR image file from a real disk it must be named <TT
+CLASS="FILENAME"
+>vvfat_mbr.bin</TT
+>
+    and placed in the specified directory. Bochs uses the geometry and file system
+    type from this file and doesn't show it on the virtual disk. The same applies
+    to a boot sector image file, but it must be named <TT
+CLASS="FILENAME"
+>vvfat_boot.bin</TT
+>.
+    Using both image file is also possible if they match (grabbed from the same disk).</P
+><P
+>    FAT32 is enabled for disk with minimum 2 GB size, or if MBR / boot sector image
+    enable this filesystem. When using "vvfat" for a floppy, FAT12 is used (1.44M
+    media only). In all other cases FAT16 is used. Long filename support
+    is always present.</P
+><P
+>    Special FAT file attributes are stored in a special file named <TT
+CLASS="FILENAME"
+>vvfat_attr.cfg</TT
+>.
+    When using the "optional commit" feature, modified attributes are saved to this file.
+    The "optional commit" also supports setting the file modification date and time.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5092"
+>9.21.11.2. image creation</A
+></H3
+><P
+>    Not necessary. The directory must exist before running Bochs.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5095"
+>9.21.11.3. path</A
+></H3
+><P
+>    The "path" option of the ataX-xxx directive in the configuration file
+    must point to an existing local directory. The redolog name can be set
+    with the "journal" option of the same directive. If not set, the redolog
+    name is created by adding the filename "vvfat.dir.redolog" to the path.
+    A random suffix is also appended to the redolog name.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5098"
+>9.21.11.4. external tools</A
+></H3
+><P
+>    You can use your favourite file manager to copy file to the directory you'd
+    like to use. The directory should not be modified while Bochs is running.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5101"
+>9.21.11.5. typical use</A
+></H3
+><P
+>    Accessing files of the host hard drive is only possible with vvfat.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H3
+CLASS="SECTION"
+><A
+NAME="AEN5104"
+>9.21.11.6. limitations</A
+></H3
+><P
+>    There is no runtime write support present yet. All changes are written to
+    the volatile redolog and they can only be committed on Bochs exit.</P
+><P
+>    When using the MBR from image file only the first partition is used and it
+    must be of type FAT16 or FAT32. FAT12 can be used for the floppy only.
+    An extended partition or other file system types are not supported.</P
+><P
+>    The "vvfat" implementation does not support save/restore, since there is no
+    check if the host directory tree and all files are unmodified after saving
+    the Bochs state.</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="voodoo-notes.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="using-bximage.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Notes about Voodoo Graphics usage</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="howto.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Using the bximage tool</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

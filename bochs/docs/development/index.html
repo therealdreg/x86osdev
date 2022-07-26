@@ -1,0 +1,686 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Bochs Developers Guide</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="NEXT"
+TITLE="Resources for developers"
+HREF="resources.html"></HEAD
+><BODY
+CLASS="BOOK"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="BOOK"
+><A
+NAME="AEN1"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+>Bochs Developers Guide</A
+></H1
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN5"
+></A
+>Kevin Lawton</H3
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN8"
+></A
+>Bryce Denney</H3
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN11"
+></A
+>Christophe Bothamy</H3
+><H4
+CLASS="EDITEDBY"
+>Edited by</H4
+><H3
+CLASS="EDITOR"
+>Michael Calabrese</H3
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>1. <A
+HREF="resources.html"
+>Resources for developers</A
+></DT
+><DD
+><DL
+><DT
+>1.1. <A
+HREF="resources.html#SVN-WRITE-ACCESS-SETUP"
+>Setting up SVN write access</A
+></DT
+><DT
+>1.2. <A
+HREF="using-svn-write-access.html"
+>Using SVN write access</A
+></DT
+><DD
+><DL
+><DT
+>1.2.1. <A
+HREF="using-svn-write-access.html#AEN28"
+>Checking in files</A
+></DT
+><DT
+>1.2.2. <A
+HREF="using-svn-write-access.html#AEN41"
+>Creating a backup of the SVN repository</A
+></DT
+><DT
+>1.2.3. <A
+HREF="using-svn-write-access.html#AEN47"
+>Setting SVN commit notifications</A
+></DT
+></DL
+></DD
+><DT
+>1.3. <A
+HREF="other.html"
+>Ideas for other sections</A
+></DT
+></DL
+></DD
+><DT
+>2. <A
+HREF="about-the-code.html"
+>About the code</A
+></DT
+><DD
+><DL
+><DT
+>2.1. <A
+HREF="about-the-code.html#CODE-OVERVIEW"
+>Overview</A
+></DT
+><DT
+>2.2. <A
+HREF="directory-structure.html"
+>Directory Structure</A
+></DT
+><DT
+>2.3. <A
+HREF="emulator-objects.html"
+>Emulator Objects</A
+></DT
+><DD
+><DL
+><DT
+>2.3.1. <A
+HREF="emulator-objects.html#AEN186"
+>Weird macros and other mysteries</A
+></DT
+><DT
+>2.3.2. <A
+HREF="emulator-objects.html#STATIC-METHODS-HACK"
+>Static methods hack</A
+></DT
+><DT
+>2.3.3. <A
+HREF="emulator-objects.html#CPU-OBJECTS"
+>CPU objects in UP/SMP configurations</A
+></DT
+><DT
+>2.3.4. <A
+HREF="emulator-objects.html#SIMINTERFACE"
+>The simulator interface</A
+></DT
+><DT
+>2.3.5. <A
+HREF="emulator-objects.html#CONFIG-PARAMETER-TREE"
+>The configuration parameter tree</A
+></DT
+><DT
+>2.3.6. <A
+HREF="emulator-objects.html#SAVE-RESTORE"
+>The save/restore feature</A
+></DT
+></DL
+></DD
+><DT
+>2.4. <A
+HREF="configure-scripting.html"
+>Configure Scripting</A
+></DT
+><DT
+>2.5. <A
+HREF="logfunctions.html"
+>Log Functions</A
+></DT
+><DD
+><DL
+><DT
+>2.5.1. <A
+HREF="logfunctions.html#AEN357"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+>2.6. <A
+HREF="timers.html"
+>Internal timers</A
+></DT
+><DD
+><DL
+><DT
+>2.6.1. <A
+HREF="timers.html#AEN405"
+>Overview</A
+></DT
+><DT
+>2.6.2. <A
+HREF="timers.html#AEN433"
+>Timer definitions, members and methods</A
+></DT
+><DT
+>2.6.3. <A
+HREF="timers.html#AEN443"
+>Detailed functional description</A
+></DT
+></DL
+></DD
+><DT
+>2.7. <A
+HREF="devmodel.html"
+>The Bochs devices base class <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bx_devmodel_c</I
+></SPAN
+></A
+></DT
+><DT
+>2.8. <A
+HREF="cmos-map.html"
+>Bochs's CMOS map</A
+></DT
+><DT
+>2.9. <A
+HREF="sb16-emulation-basics.html"
+>Sound Blaster 16 Emulation</A
+></DT
+><DD
+><DL
+><DT
+>2.9.1. <A
+HREF="sb16-emulation-basics.html#AEN490"
+>How well does it work?</A
+></DT
+><DT
+>2.9.2. <A
+HREF="sb16-emulation-basics.html#AEN496"
+>Output to a sound card</A
+></DT
+><DT
+>2.9.3. <A
+HREF="sb16-emulation-basics.html#AEN505"
+>Configuring Bochs</A
+></DT
+><DT
+>2.9.4. <A
+HREF="sb16-emulation-basics.html#AEN518"
+>Runtime configuration</A
+></DT
+></DL
+></DD
+><DT
+>2.10. <A
+HREF="sound-lowlovel-basics.html"
+>The sound lowlevel interface</A
+></DT
+><DD
+><DL
+><DT
+>2.10.1. <A
+HREF="sound-lowlovel-basics.html#AEN531"
+>Files</A
+></DT
+><DT
+>2.10.2. <A
+HREF="sound-lowlovel-basics.html#AEN548"
+>Defines and strutures</A
+></DT
+><DT
+>2.10.3. <A
+HREF="sound-lowlovel-basics.html#AEN557"
+>Classes</A
+></DT
+><DT
+>2.10.4. <A
+HREF="sound-lowlovel-basics.html#AEN585"
+>The base class <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bx_sound_lowlevel_c</I
+></SPAN
+></A
+></DT
+><DT
+>2.10.5. <A
+HREF="sound-lowlovel-basics.html#AEN592"
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>waveout</I
+></SPAN
+> base class <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bx_soundlow_waveout_c</I
+></SPAN
+></A
+></DT
+><DT
+>2.10.6. <A
+HREF="sound-lowlovel-basics.html#AEN898"
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>wavein</I
+></SPAN
+> base class <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bx_soundlow_wavein_c</I
+></SPAN
+></A
+></DT
+><DT
+>2.10.7. <A
+HREF="sound-lowlovel-basics.html#AEN950"
+>The <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>midiout</I
+></SPAN
+> base class <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>bx_soundlow_midiout_c</I
+></SPAN
+></A
+></DT
+></DL
+></DD
+><DT
+>2.11. <A
+HREF="harddisk-redologs.html"
+>Harddisk Images based on redologs</A
+></DT
+><DD
+><DL
+><DT
+>2.11.1. <A
+HREF="harddisk-redologs.html#AEN1041"
+>Description</A
+></DT
+><DT
+>2.11.2. <A
+HREF="harddisk-redologs.html#AEN1050"
+>How redologs works ?</A
+></DT
+><DT
+>2.11.3. <A
+HREF="harddisk-redologs.html#AEN1152"
+>Parameters</A
+></DT
+><DT
+>2.11.4. <A
+HREF="harddisk-redologs.html#AEN1316"
+>Redolog class description</A
+></DT
+><DT
+>2.11.5. <A
+HREF="harddisk-redologs.html#AEN1388"
+>Disk image classes description</A
+></DT
+></DL
+></DD
+><DT
+>2.12. <A
+HREF="add-keymapping.html"
+>How to add keymapping in a GUI client</A
+></DT
+><DT
+>2.13. <A
+HREF="bochsbios.html"
+>The Bochs BIOS</A
+></DT
+><DD
+><DL
+><DT
+>2.13.1. <A
+HREF="bochsbios.html#BIOSSUMS"
+>The biossums utility</A
+></DT
+></DL
+></DD
+><DT
+>2.14. <A
+HREF="bochsplugins.html"
+>The Bochs plugin interface</A
+></DT
+><DD
+><DL
+><DT
+>2.14.1. <A
+HREF="bochsplugins.html#AEN1548"
+>Introduction</A
+></DT
+><DT
+>2.14.2. <A
+HREF="bochsplugins.html#AEN1568"
+>Plugin file names</A
+></DT
+><DT
+>2.14.3. <A
+HREF="bochsplugins.html#AEN1609"
+>Plugin types</A
+></DT
+><DT
+>2.14.4. <A
+HREF="bochsplugins.html#AEN1698"
+>The plugin entry function</A
+></DT
+><DT
+>2.14.5. <A
+HREF="bochsplugins.html#AEN1714"
+>Compatibility with "monolithic" Bochs compilation</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>3. <A
+HREF="debugger-advanced.html"
+>Advanced debugger usage</A
+></DT
+><DD
+><DL
+><DT
+>3.1. <A
+HREF="debugger-advanced.html#IODEBUG"
+>I/O Interface to Bochs Debugger</A
+></DT
+><DD
+><DL
+><DT
+>3.1.1. <A
+HREF="debugger-advanced.html#AEN1730"
+>Commands supported by port 0x8A00</A
+></DT
+><DT
+>3.1.2. <A
+HREF="debugger-advanced.html#AEN1738"
+>Access to port 0x8A01 (write-only)</A
+></DT
+><DT
+>3.1.3. <A
+HREF="debugger-advanced.html#AEN1742"
+>Sample</A
+></DT
+></DL
+></DD
+><DT
+>3.2. <A
+HREF="instrumentation.html"
+>The instrumentation feature</A
+></DT
+><DT
+>3.3. <A
+HREF="debugger-internals.html"
+>Bochs debugger internals</A
+></DT
+></DL
+></DD
+><DT
+>4. <A
+HREF="coding.html"
+>Coding</A
+></DT
+><DD
+><DL
+><DT
+>4.1. <A
+HREF="coding.html#AEN1757"
+>Coding guidelines</A
+></DT
+><DT
+>4.2. <A
+HREF="svn-release.html"
+>Building a Bochs release</A
+></DT
+><DD
+><DL
+><DT
+>4.2.1. <A
+HREF="svn-release.html#AEN1792"
+>Preparing source files and SVN</A
+></DT
+><DT
+>4.2.2. <A
+HREF="svn-release.html#AEN1802"
+>Anonymous SVN checkout and platform-independent sources</A
+></DT
+><DT
+>4.2.3. <A
+HREF="svn-release.html#AEN1806"
+>Building the release on Linux</A
+></DT
+><DT
+>4.2.4. <A
+HREF="svn-release.html#AEN1811"
+>Building the release on win32</A
+></DT
+><DT
+>4.2.5. <A
+HREF="svn-release.html#AEN1828"
+>Creating a file release and uploading files on SF</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>5. <A
+HREF="webmastering.html"
+>Webmastering</A
+></DT
+><DD
+><DL
+><DT
+>5.1. <A
+HREF="webmastering.html#PROJECT-WEBSPACE"
+>Bochs project webspace</A
+></DT
+><DT
+>5.2. <A
+HREF="update-website.html"
+>Updating the Bochs website content</A
+></DT
+><DT
+>5.3. <A
+HREF="update-svn-snapshot.html"
+>Updating the SVN snapshot</A
+></DT
+><DT
+>5.4. <A
+HREF="update-online-docs.html"
+>Updating the online documentation</A
+></DT
+><DT
+>5.5. <A
+HREF="other-content.html"
+>other content</A
+></DT
+><DT
+>5.6. <A
+HREF="available-tools.html"
+>available tools</A
+></DT
+></DL
+></DD
+></DL
+></DIV
+><DIV
+CLASS="LOT"
+><DL
+CLASS="LOT"
+><DT
+><B
+>List of Tables</B
+></DT
+><DT
+>2-1. <A
+HREF="directory-structure.html#AEN95"
+>Directory structure</A
+></DT
+><DT
+>2-2. <A
+HREF="emulator-objects.html#AEN254"
+>Parameter types</A
+></DT
+><DT
+>2-3. <A
+HREF="emulator-objects.html#AEN290"
+>Save/restore parameter types</A
+></DT
+><DT
+>2-4. <A
+HREF="sound-lowlovel-basics.html#AEN604"
+>Waveout methods</A
+></DT
+><DT
+>2-5. <A
+HREF="sound-lowlovel-basics.html#AEN732"
+>format bits</A
+></DT
+><DT
+>2-6. <A
+HREF="sound-lowlovel-basics.html#AEN756"
+>codecs</A
+></DT
+><DT
+>2-7. <A
+HREF="sound-lowlovel-basics.html#AEN802"
+>wave output types</A
+></DT
+><DT
+>2-8. <A
+HREF="harddisk-redologs.html#AEN1064"
+>Generic header description</A
+></DT
+><DT
+>2-9. <A
+HREF="harddisk-redologs.html#AEN1106"
+>Redolog specific header description</A
+></DT
+><DT
+>2-10. <A
+HREF="harddisk-redologs.html#AEN1155"
+>How number of entries in the catalog and number of blocks by extents are computed</A
+></DT
+><DT
+>2-11. <A
+HREF="bochsplugins.html#AEN1574"
+>Plugin file naming</A
+></DT
+><DT
+>2-12. <A
+HREF="bochsplugins.html#AEN1613"
+>Plugin types</A
+></DT
+><DT
+>5-1. <A
+HREF="webmastering.html#AEN1845"
+>Directory structure</A
+></DT
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="resources.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Resources for developers</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
